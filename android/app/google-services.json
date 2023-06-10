@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "905882678129",
+    "project_id": "twittusk",
+    "storage_bucket": "twittusk.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:905882678129:android:3420c8b6a307d385d0fcd0",
+        "android_client_info": {
+          "package_name": "com.yummy.twittusk"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "905882678129-ba11vills5hcq16lg0c9gfffhh6uj5f9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBA4gwl4RNkyI5rNYDX4U1bzsvT6LJUJME"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "905882678129-ba11vills5hcq16lg0c9gfffhh6uj5f9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
