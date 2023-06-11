@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:twittusk/data/repository/local/local_tusk_repository.dart';
 import 'package:twittusk/presentation/screens/logic/feed_bloc/feed_bloc.dart';
 import 'package:twittusk/presentation/screens/ui/feed_screen/feed_screen.dart';
+import 'package:twittusk/presentation/screens/ui/nav_screen/nav_screen.dart';
 import 'package:twittusk/theme/theme.dart';
 
 import 'domain/repository/tusk_repository.dart';
@@ -38,7 +39,7 @@ class MyApp extends StatelessWidget {
             colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
             useMaterial3: true,
           ),*/
-          home: const FeedScreen(),
+          home: NavScreen(),
         ),
       ),
     );

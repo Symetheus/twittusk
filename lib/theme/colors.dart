@@ -15,6 +15,7 @@ class CustomColors {
     this.textSecondary = CustomDarkColors.greyDark,
     this.textSecondaryLight = CustomDarkColors.grey,
     this.disabled = CustomDarkColors.disabled,
+    this.bottomNavBar = CustomDarkColors.trueBlackTransparent,
     this.backgroundElevated = Colors.red, // TO Implement
   });
 
@@ -29,7 +30,7 @@ class CustomColors {
   final Color onSecondary;
   final Color onSurface;
   final Color onBackground;
-
+  final Color bottomNavBar;
   final Color textSecondary;
   final Color textSecondaryLight;
   final Color disabled;
@@ -46,6 +47,7 @@ class CustomDarkColors {
   static const Color whiteIceberg = Color(0xFFFFFFFF);
   static const Color almostBlack = Color(0xFF0F1112);
   static const Color trueBlack = Color(0xFF000000);
+  static const Color trueBlackTransparent = Color(0xCC000000);
   static const Color discord = Color(0xFF212427);
   static const Color disabled = Color(0xFF90B2BA);
 }

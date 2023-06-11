@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:twittusk/presentation/screens/logic/feed_bloc/feed_bloc.dart';
 import 'package:twittusk/presentation/widgets/tusk_item.dart';
 import 'package:twittusk/theme/dimens.dart';
+import 'package:twittusk/theme/theme.dart';
 
 class FeedScreen extends StatelessWidget {
   const FeedScreen({Key? key}) : super(key: key);
@@ -33,6 +35,20 @@ class FeedScreen extends StatelessWidget {
           }
         },
       ),
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: 60),
+        child: FloatingActionButton(
+          onPressed: _onPressed,
+          backgroundColor: Theme.of(context).customColors.primary,
+          child: SvgPicture.asset(
+            'lib/assets/icons/tusk-solid.svg',
+            width: Dimens.mediumIconSize,
+          )
+        ),
+      )
     );
+  }
+
+  void _onPressed() {
   }
 }

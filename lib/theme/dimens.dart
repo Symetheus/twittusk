@@ -31,4 +31,5 @@ class Dimens {
   static const double subtitleLineHeight = 1.38;
 
   static const double smallIconSize = 20;
+  static const double mediumIconSize = 25;
 }
