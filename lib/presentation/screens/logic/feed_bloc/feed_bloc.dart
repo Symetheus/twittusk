@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/foundation.dart';
 import 'package:twittusk/domain/models/tusk.dart';
-import 'package:twittusk/domain/repository/feed_repository.dart';
+import 'package:twittusk/domain/repository/tusk_repository.dart';
 
 part 'feed_event.dart';
 

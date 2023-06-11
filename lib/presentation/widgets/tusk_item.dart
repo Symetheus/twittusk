@@ -38,6 +38,18 @@ class TuskItem extends StatelessWidget {
           children: [
             _getProfileInfo(context),
             const SizedBox(height: Dimens.standardPadding),
+            if(tusk.imageUri != null) ...[
+              ClipRRect(
+                borderRadius: BorderRadius.circular(Dimens.standardRadius),
+                child: Image.network(
+                  tusk.imageUri!,
+                  width: double.infinity,
+                  height: 200,
+                  fit: BoxFit.cover,
+                ),
+              ),
+              const SizedBox(height: Dimens.standardPadding),
+            ],
             Text(
               tusk.description,
               textAlign: TextAlign.start,

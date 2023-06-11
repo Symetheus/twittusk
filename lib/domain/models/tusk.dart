@@ -5,7 +5,6 @@ import 'package:twittusk/domain/models/profile.dart';
 class Tusk {
 
   final String id;
-  final String title;
   final String description;
   final String? imageUri;
   final Profile profile;
@@ -16,7 +15,6 @@ class Tusk {
 
   Tusk({
     required this.id,
-    required this.title,
     required this.description,
     this.imageUri,
     required this.profile,
@@ -58,16 +56,16 @@ class Tusk {
 
   String getPublishAtStr() {
     final diff = DateTime.now().difference(publishedAt);
-    if(diff.inSeconds < 60) {
-      return "${diff.inSeconds} seconds ago";
-    } else if (diff.inMinutes < 60) {
-      return "${diff.inMinutes} minutes ago";
+    if(diff.inSeconds > -60 && diff.inSeconds < 0) {
+      return "${diff.inSeconds * -1} seconds ago";
+    } else if (diff.inMinutes > -60 && diff.inMinutes < 0) {
+      return "${diff.inMinutes * -1} minutes ago";
     } else if (diff.inHours < 24) {
-      return "${diff.inHours} day ago";
-    } else if (diff.inDays < 4) {
+      return "${diff.inHours} hours ago";
+    } else if (diff.inDays < 7) {
       return "${diff.inDays} day ago";
     } else {
-      return "Publish on ${DateFormat('MM/dd/YYYY').format(publishedAt)}";
+      return "Publish on ${DateFormat('MM/dd/yyyy').format(publishedAt)}";
     }
   }
 }

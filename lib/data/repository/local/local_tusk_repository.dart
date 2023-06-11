@@ -1,6 +1,5 @@
 import 'dart:async';
-
-import 'package:twittusk/domain/repository/feed_repository.dart';
+import 'package:twittusk/domain/repository/tusk_repository.dart';
 import '../../../domain/models/profile.dart';
 import '../../../domain/models/tusk.dart';
 
@@ -21,21 +20,29 @@ class LocalTuskRepository implements TuskRepository {
     );
     _controller.add(<Tusk>[
       Tusk(
+        id: "19",
+        description: "Bienvenue à tous dans ce cours sur SpaceX, l'une des entreprises les plus innovantes et passionnantes du monde de l'exploration spatiale. SpaceX, abréviation de Space Exploration Technologies Corp., a été fondée en 2002 par l'entrepreneur visionnaire Elon Musk dans le but de révolutionner l'industrie spatiale et de rendre l'exploration de l'espace plus accessible.",
+        profile: profile,
+        imageUri: "https://i.ytimg.com/vi/Dy68lCXLsGc/maxresdefault.jpg",
+        publishedAt: DateTime(2023, 06, 11, 11, 0),
+        nbComments: 22,
+        nbDislikes: 19647,
+        nbLikes: 308729363,
+      ),
+      Tusk(
           id: "20",
-          title: "This is a title",
           description: "Bienvenue à tous dans ce cours sur SpaceX, l'une des entreprises les plus innovantes et passionnantes du monde de l'exploration spatiale. SpaceX, abréviation de Space Exploration Technologies Corp., a été fondée en 2002 par l'entrepreneur visionnaire Elon Musk dans le but de révolutionner l'industrie spatiale et de rendre l'exploration de l'espace plus accessible.",
           profile: profile,
-          publishedAt: DateTime.now(),
+          publishedAt: DateTime(2023, 06, 5, 12, 52),
           nbComments: 22,
           nbDislikes: 19647,
           nbLikes: 308729363,
       ),
       Tusk(
         id: "21",
-        title: "This is ",
-        description: "dqsdqsdds",
+        description: "TU pues CONNNAARRDDD !!!!",
         profile: profile,
-        publishedAt: DateTime.now(),
+        publishedAt: DateTime(2023, 02, 11, 12, 52),
         nbComments: 3,
         nbDislikes: 20,
         nbLikes: 13786,

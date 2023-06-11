@@ -5,7 +5,7 @@ import 'package:twittusk/presentation/screens/logic/feed_bloc/feed_bloc.dart';
 import 'package:twittusk/presentation/screens/ui/feed_screen/feed_screen.dart';
 import 'package:twittusk/theme/theme.dart';
 
-import 'domain/repository/feed_repository.dart';
+import 'domain/repository/tusk_repository.dart';
 
 void main() {
   runApp(const MyApp());
