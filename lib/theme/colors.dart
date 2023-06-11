@@ -46,6 +46,6 @@ class CustomDarkColors {
   static const Color whiteIceberg = Color(0xFFFFFFFF);
   static const Color almostBlack = Color(0xFF0F1112);
   static const Color trueBlack = Color(0xFF000000);
-  static const Color discord = Color(0xFF14211C);
+  static const Color discord = Color(0xFF212427);
   static const Color disabled = Color(0xFF90B2BA);
 }

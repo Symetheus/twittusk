@@ -42,6 +42,11 @@ dependencies:
   cloud_functions: ^4.3.2
   firebase_messaging: ^14.6.2
   cloud_firestore: ^4.8.0
+  bloc: ^8.1.2
+  bloc_provider: ^1.0.0
+  flutter_bloc: ^8.1.3
+  flutter_svg: ^2.0.6
+  intl: ^0.18.1
 
 dev_dependencies:
   flutter_test:
@@ -71,6 +76,15 @@ flutter:
         - asset: lib/assets/fonts/avenir_medium.ttf
         - asset: lib/assets/fonts/avenir_heavy.ttf
           weight: 700
+
+  assets:
+    - lib/assets/icons/account.svg
+    - lib/assets/icons/dislike.svg
+    - lib/assets/icons/home.svg
+    - lib/assets/icons/like.svg
+    - lib/assets/icons/share.svg
+    - lib/assets/icons/tusk-solid.svg
+    - lib/assets/icons/comment.svg
 
   # To add assets to your application, add an assets section, like this:
   # assets:

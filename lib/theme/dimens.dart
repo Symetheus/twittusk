@@ -15,6 +15,7 @@ class Dimens {
   static const double standardInputMinHeight = 50;
   static const double standardInputBorderWidth = 1;
 
+  static const double bigRadius = 30;
   static const double minRadius = 4;
   static const double smallRadius = 8;
   static const double standardRadius = 14;
@@ -28,4 +29,6 @@ class Dimens {
   static const double largeLineHeight = 1.33;
   static const double standardLineHeight = 1.37;
   static const double subtitleLineHeight = 1.38;
+
+  static const double smallIconSize = 20;
 }

@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:twittusk/data/repository/local/local_tusk_repository.dart';
 import 'package:twittusk/theme/theme.dart';
+import 'package:twittusk/ui/screens/feed_screen/bloc/feed_bloc.dart';
+import 'package:twittusk/ui/screens/feed_screen/feed_screen.dart';
+
+import 'domain/repository/feed_repository.dart';
 
 void main() {
   runApp(const MyApp());
@@ -10,15 +16,31 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Twittusk',
-      theme: AppTheme.darkThemeData,
-      debugShowCheckedModeBanner: false,
-      /*theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),*/
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+    return MultiRepositoryProvider(
+      providers: [
+        RepositoryProvider<TuskRepository>(
+          create: (context) => LocalTuskRepository(),
+        ),
+      ],
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider<FeedBloc>(
+            create: (context) => FeedBloc(
+              context.read<TuskRepository>(),
+            ),
+          ),
+        ],
+        child: MaterialApp(
+          title: 'Twittusk',
+          theme: AppTheme.darkThemeData,
+          debugShowCheckedModeBanner: false,
+          /*theme: ThemeData(
+            colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+            useMaterial3: true,
+          ),*/
+          home: const FeedScreen(),
+        ),
+      ),
     );
   }
 }
