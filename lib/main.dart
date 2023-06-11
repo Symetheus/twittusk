@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:twittusk/data/repository/local/local_tusk_repository.dart';
+import 'package:twittusk/presentation/screens/logic/feed_bloc/feed_bloc.dart';
+import 'package:twittusk/presentation/screens/ui/feed_screen/feed_screen.dart';
 import 'package:twittusk/theme/theme.dart';
-import 'package:twittusk/ui/screens/feed_screen/bloc/feed_bloc.dart';
-import 'package:twittusk/ui/screens/feed_screen/feed_screen.dart';
 
 import 'domain/repository/feed_repository.dart';
 

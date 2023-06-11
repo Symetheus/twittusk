@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:twittusk/ui/widgets/tusk_item.dart';
-
-import '../../../theme/dimens.dart';
-import 'bloc/feed_bloc.dart';
+import 'package:twittusk/presentation/screens/logic/feed_bloc/feed_bloc.dart';
+import 'package:twittusk/presentation/widgets/tusk_item.dart';
+import 'package:twittusk/theme/dimens.dart';
 
 class FeedScreen extends StatelessWidget {
   const FeedScreen({Key? key}) : super(key: key);

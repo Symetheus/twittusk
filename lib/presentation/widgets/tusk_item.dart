@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:twittusk/domain/models/tusk.dart';
+import 'package:twittusk/presentation/widgets/action_icon.dart';
+import 'package:twittusk/theme/dimens.dart';
 import 'package:twittusk/theme/theme.dart';
-import 'package:twittusk/ui/widgets/action_icon.dart';
-import '../../domain/models/tusk.dart';
-import '../../theme/dimens.dart';
 
 class TuskItem extends StatelessWidget {
   final Tusk tusk;

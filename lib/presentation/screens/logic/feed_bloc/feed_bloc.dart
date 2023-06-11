@@ -1,10 +1,10 @@
-import 'dart:async';
 import 'package:bloc/bloc.dart';
-import 'package:meta/meta.dart';
-import '../../../../domain/models/tusk.dart';
-import '../../../../domain/repository/feed_repository.dart';
+import 'package:flutter/foundation.dart';
+import 'package:twittusk/domain/models/tusk.dart';
+import 'package:twittusk/domain/repository/feed_repository.dart';
 
 part 'feed_event.dart';
+
 part 'feed_state.dart';
 
 class FeedBloc extends Bloc<FeedEvent, FeedState> {

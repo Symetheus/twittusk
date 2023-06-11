@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import '../../theme/dimens.dart';
+import 'package:twittusk/theme/dimens.dart';
+
 
 class ActionIcon extends StatelessWidget {
   final Color color;
