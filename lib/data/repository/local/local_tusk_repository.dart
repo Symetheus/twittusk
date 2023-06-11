@@ -1,22 +1,21 @@
 import 'dart:async';
 import 'package:twittusk/domain/repository/tusk_repository.dart';
-import '../../../domain/models/profile.dart';
-import '../../../domain/models/tusk.dart';
+import 'package:twittusk/domain/models/user.dart';
+import 'package:twittusk/domain/models/tusk.dart';
 
 class LocalTuskRepository implements TuskRepository {
-  final StreamController<List<Tusk>> _controller =
-  StreamController<List<Tusk>>();
-
+  final StreamController<List<Tusk>> _controller = StreamController<List<Tusk>>();
 
   @override
   Stream<List<Tusk>> getTusks() {
-    final profile = Profile(
-        id: "1",
-        lastname: "MUSK",
-        username: "@ElonMusk",
-        firstname: "Elon",
-        bio: "This is Elon Musk !",
-        profilePicUri: "https://www.thestreet.com/.image/ar_1:1%2Cc_fill%2Ccs_srgb%2Cfl_progressive%2Cq_auto:good%2Cw_1200/MTg4NzYwNTI4NjE5ODQxMDU2/elon-musk_4.jpg",
+    final profile = User(
+      uid: "1",
+      username: "Elon MUSK",
+      arobase: "@ElonMusk",
+      email: 'elon.musk@openai.com',
+      profilePicUri: "https://www.thestreet.com/.image/ar_1:1%2Cc_fill%2Ccs_srgb%2Cfl_progressive%2Cq_auto:good%2Cw_1200/MTg4NzYwNTI4NjE5ODQxMDU2/elon-musk_4.jpg",
+      bannerPicUri: '',
+      bio: "This is Elon Musk !",
     );
     _controller.add(<Tusk>[
       Tusk(
@@ -51,4 +50,9 @@ class LocalTuskRepository implements TuskRepository {
     return _controller.stream;
   }
 
+  @override
+  Stream<List<Tusk>> getTusksByUser() {
+    // TODO: implement getTusksByUser
+    throw UnimplementedError();
+  }
 }

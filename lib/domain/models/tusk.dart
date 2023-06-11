@@ -1,13 +1,11 @@
-
 import 'package:intl/intl.dart';
-import 'package:twittusk/domain/models/profile.dart';
+import 'package:twittusk/domain/models/user.dart';
 
 class Tusk {
-
   final String id;
   final String description;
   final String? imageUri;
-  final Profile profile;
+  final User profile;
   final DateTime publishedAt;
   final int nbLikes;
   final int nbDislikes;
@@ -56,7 +54,7 @@ class Tusk {
 
   String getPublishAtStr() {
     final diff = DateTime.now().difference(publishedAt);
-    if(diff.inSeconds > -60 && diff.inSeconds < 0) {
+    if (diff.inSeconds > -60 && diff.inSeconds < 0) {
       return "${diff.inSeconds * -1} seconds ago";
     } else if (diff.inMinutes > -60 && diff.inMinutes < 0) {
       return "${diff.inMinutes * -1} minutes ago";

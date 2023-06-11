@@ -15,6 +15,9 @@ class Dimens {
   static const double standardInputMinHeight = 50;
   static const double standardInputBorderWidth = 1;
 
+  static const double littleButtonMinWidth = 85;
+  static const double littleButtonMinInteractiveTouch = 36;
+
   static const double bigRadius = 30;
   static const double minRadius = 4;
   static const double smallRadius = 8;
@@ -32,4 +35,9 @@ class Dimens {
 
   static const double smallIconSize = 20;
   static const double mediumIconSize = 25;
+
+  static const double dividerThickness = 2.0;
+  static const double thinDividerThickness = 1.0;
+
+  static const double bannerMaxHeight = 125;
 }

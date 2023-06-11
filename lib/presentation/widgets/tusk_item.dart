@@ -85,12 +85,12 @@ class TuskItem extends StatelessWidget {
                 Row(
                   children: [
                     Text(
-                      '${tusk.profile.firstname} ${tusk.profile.lastname}',
+                      tusk.profile.username,
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
                     const SizedBox(width: Dimens.minPadding),
                     Text(
-                      tusk.profile.username,
+                      tusk.profile.arobase,
                       style: TextStyle(
                         color: Theme.of(context).customColors.secondary,
                         fontSize: Dimens.subtitleTextSize,
