@@ -47,6 +47,7 @@ dependencies:
   flutter_bloc: ^8.1.3
   flutter_svg: ^2.0.6
   intl: ^0.18.1
+  google_sign_in: ^5.0.0
 
 dev_dependencies:
   flutter_test:
@@ -78,6 +79,7 @@ flutter:
           weight: 700
 
   assets:
+    # Icons
     - lib/assets/icons/account.svg
     - lib/assets/icons/dislike.svg
     - lib/assets/icons/home.svg
@@ -85,6 +87,11 @@ flutter:
     - lib/assets/icons/share.svg
     - lib/assets/icons/tusk-solid.svg
     - lib/assets/icons/comment.svg
+
+    # Images
+    - lib/assets/images/elon_musk.png
+    - lib/assets/images/google_logo.png
+    - lib/assets/images/twitter_logo.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:
