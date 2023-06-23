@@ -46,3 +46,4 @@ app.*.map.json
 # Environment configuration
 *.env
 !/lib/.env
+/lib/.env
