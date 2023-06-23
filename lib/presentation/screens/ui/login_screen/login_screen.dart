@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import '../../../../provider/auth_provider.dart';
 import '../../../widgets/form/login_form.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -32,18 +33,39 @@ class LoginScreen extends StatelessWidget {
             ),
           ),
           Positioned(
-            top: 300,
+            top: 275,
             child: Padding(
               padding: const EdgeInsets.all(10.0),
               child: SizedBox(
                 width: screenWidth - 20,
-                height: screenHeight - 300,
-                child: LoginForm(),
+                height: screenHeight - 250,
+                child: LoginForm(
+                  onConnectionWithGoogle: () => _signInWithGoogle(context),
+                  onConnectionWithTwitter: () => _signInWithTwitter(context),
+                ),
               ),
             ),
           ),
         ],
       ),
     );
+  }
+
+  void _signInWithGoogle(BuildContext context) {
+    final provider = AuthProvider.of(context).googleAuth;
+    try{
+      provider.signInWithGoogle();
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  void _signInWithTwitter(BuildContext context) {
+    final provider = AuthProvider.of(context).twitterAuth;
+    try{
+      provider.signInWithTwitter();
+    } catch (e) {
+      print(e);
+    }
   }
 }
