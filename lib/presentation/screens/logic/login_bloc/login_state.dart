@@ -5,31 +5,31 @@ enum LoginStatus { initial, loading, success, error }
 class LoginState {
   final LoginStatus status;
   final String errorMessage;
-  final UserCredential? userCredential;
+  final User? user;
 
   LoginState({
     this.status = LoginStatus.initial,
     this.errorMessage = '',
-    this.userCredential,
+    this.user,
   });
 
   factory LoginState.initial() {
     return LoginState(
       status: LoginStatus.initial,
       errorMessage: '',
-      userCredential: null,
+      user: null,
     );
   }
 
   LoginState copyWith({
     LoginStatus? status,
     String? errorMessage,
-    UserCredential? userCredential,
+    User? user,
   }) {
     return LoginState(
       status: status ?? this.status,
       errorMessage: errorMessage ?? this.errorMessage,
-      userCredential: userCredential ?? this.userCredential,
+      user: user ?? this.user,
     );
   }
 }

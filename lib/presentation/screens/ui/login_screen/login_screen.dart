@@ -52,7 +52,16 @@ class LoginScreen extends StatelessWidget {
                 child: LoginForm(
                   connectionWidget: BlocConsumer<LoginBloc, LoginState>(
                     listener: (context, state) {
-                      // TODO: implement listener
+                      if(state.status == LoginStatus.error) {
+                        AlertModal.show(
+                          context: context,
+                          title: "Invalid",
+                          message: state.errorMessage,
+                          onOk: () => Navigator.of(context).pop(),
+                        );
+                      } else if(state.status == LoginStatus.success) {
+                        print("User email ==> ${state.user!.email}");
+                      }
                     },
                     builder: (context, state) {
                       if (state.status == LoginStatus.loading) {
