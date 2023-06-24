@@ -94,6 +94,14 @@ class _LoginScreenState extends State<LoginScreen> {
                             message: state.errorMessage,
                             onOk: () => Navigator.of(context).pop(),
                           );
+                        } else if (state.status == LoginStatus.successResetPassword) {
+                          AlertModal.show(
+                            context: context,
+                            title: "Reset password",
+                            message: "Check your email to reset your password",
+                            onOk: () => Navigator.of(context).pop(),
+                          );
+                          _changeToLoginForm(context);
                         } else if (state.status == LoginStatus.success) {
                           print("User email ==> ${state.user!.email}");
                         }
@@ -117,6 +125,8 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
+
+  // ========================= CALLBACKS =========================
 
   void _signInWithGoogle(BuildContext context) async {
     try {
@@ -145,7 +155,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _onConnection(BuildContext context) {
-    BlocProvider.of<LoginBloc>(context).add(LoginConnection(
+    BlocProvider.of<LoginBloc>(context).add(SignInEvent(
       email: emailController.text,
       password: passwordController.text,
     ));
@@ -155,12 +165,22 @@ class _LoginScreenState extends State<LoginScreen> {
     setState(() {
       currentForm = ResetPasswordForm(
         emailController: emailController,
-        onCancel: () => _onCancelResetPassword(context),
+        onCancel: () => _changeToLoginForm(context),
+        onResetPassword: () => _onResetPassword(context),
       );
     });
   }
 
-  void _onCancelResetPassword(BuildContext context) {
+  void _onResetPassword(BuildContext context) {
+    BlocProvider.of<LoginBloc>(context).add(ResetPasswordEvent(
+      email: emailController.text,
+    ));
+  }
+
+
+  // ========================= UPDATE FORM =========================
+
+  void _changeToLoginForm(BuildContext context) {
     setState(() {
       currentForm = LoginForm(
         emailController: emailController,
