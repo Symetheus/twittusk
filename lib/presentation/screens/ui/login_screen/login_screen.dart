@@ -4,17 +4,37 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:twittusk/domain/exceptions/auth_excpetion.dart';
 import 'package:twittusk/presentation/screens/modals/alert_modal.dart';
-import 'package:twittusk/presentation/widgets/loading_spinner/loading_spinner.dart';
 import '../../../../provider/auth_provider.dart';
+import '../../../../theme/dimens.dart';
 import '../../../widgets/form/login_form.dart';
-import '../../../widgets/solid_button.dart';
+import '../../../widgets/form/reset_password_form.dart';
 import '../../logic/login_bloc/login_bloc.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
+
+  LoginScreen({super.key});
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  late Widget currentForm;
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
-  LoginScreen({super.key});
+  @override
+  void initState() {
+    super.initState();
+    currentForm = LoginForm(
+      emailController: emailController,
+      passwordController: passwordController,
+      onSignIn: () => _onConnection(context),
+      onConnectionWithGoogle: () => _signInWithGoogle(context),
+      onConnectionWithTwitter: () => _signInWithTwitter(context),
+      onForgotPassword: () => _onForgotPassword(context),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,36 +69,46 @@ class LoginScreen extends StatelessWidget {
               child: SizedBox(
                 width: screenWidth - 20,
                 height: screenHeight - 250,
-                child: LoginForm(
-                  connectionWidget: BlocConsumer<LoginBloc, LoginState>(
-                    listener: (context, state) {
-                      if(state.status == LoginStatus.error) {
-                        AlertModal.show(
-                          context: context,
-                          title: "Invalid",
-                          message: state.errorMessage,
-                          onOk: () => Navigator.of(context).pop(),
-                        );
-                      } else if(state.status == LoginStatus.success) {
-                        print("User email ==> ${state.user!.email}");
-                      }
-                    },
-                    builder: (context, state) {
-                      if (state.status == LoginStatus.loading) {
-                        return const LoadingSpinner();
-                      }
+                child: Stack(
+                  children: [
+                    SizedBox(
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(Dimens.bigRadius),
+                        child: BackdropFilter(
+                          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color:
+                                  Theme.of(context).cardColor.withOpacity(0.5),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    BlocConsumer<LoginBloc, LoginState>(
+                      listener: (context, state) {
+                        if (state.status == LoginStatus.error) {
+                          AlertModal.show(
+                            context: context,
+                            title: "Invalid",
+                            message: state.errorMessage,
+                            onOk: () => Navigator.of(context).pop(),
+                          );
+                        } else if (state.status == LoginStatus.success) {
+                          print("User email ==> ${state.user!.email}");
+                        }
+                      },
+                      builder: (context, state) {
+                        if (state.status == LoginStatus.loading) {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        }
 
-                      return SolidButton(
-                        label: "Continue",
-                        onPressed: () => _onConnection(context),
-                        backgroundColor: Theme.of(context).primaryColor,
-                      );
-                    },
-                  ),
-                  emailController: emailController,
-                  passwordController: passwordController,
-                  onConnectionWithGoogle: () => _signInWithGoogle(context),
-                  onConnectionWithTwitter: () => _signInWithTwitter(context),
+                        return currentForm;
+                      },
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -119,5 +149,27 @@ class LoginScreen extends StatelessWidget {
       email: emailController.text,
       password: passwordController.text,
     ));
+  }
+
+  void _onForgotPassword(BuildContext context) {
+    setState(() {
+      currentForm = ResetPasswordForm(
+        emailController: emailController,
+        onCancel: () => _onCancelResetPassword(context),
+      );
+    });
+  }
+
+  void _onCancelResetPassword(BuildContext context) {
+    setState(() {
+      currentForm = LoginForm(
+        emailController: emailController,
+        passwordController: passwordController,
+        onSignIn: () => _onConnection(context),
+        onConnectionWithGoogle: () => _signInWithGoogle(context),
+        onConnectionWithTwitter: () => _signInWithTwitter(context),
+        onForgotPassword: () => _onForgotPassword(context),
+      );
+    });
   }
 }

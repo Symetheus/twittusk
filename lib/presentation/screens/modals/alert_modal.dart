@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:twittusk/presentation/widgets/solid_button.dart';
+import 'package:twittusk/presentation/widgets/buttons/solid_button.dart';
 
 import '../../../theme/dimens.dart';
 

@@ -15,6 +15,11 @@ class FirebaseTuskRepository implements TuskRepository {
   }
 
   @override
+  Future<void> resetPassword(String email) async {
+    await _dataSource.resetPassword(email);
+  }
+
+  @override
   Stream<List<Tusk>> getTusks() {
     // TODO: implement getTusks
     throw UnimplementedError();
@@ -25,4 +30,6 @@ class FirebaseTuskRepository implements TuskRepository {
     // TODO: implement getTusksByUser
     throw UnimplementedError();
   }
+
+
 }

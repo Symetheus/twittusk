@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import '../../theme/dimens.dart';
+import '../../../theme/dimens.dart';
 
 class SolidButton extends StatelessWidget {
   final String label;

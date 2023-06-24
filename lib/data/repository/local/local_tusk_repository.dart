@@ -43,15 +43,6 @@ class LocalTuskRepository implements TuskRepository {
           nbDislikes: 19647,
           nbLikes: 308729363,
       ),
-      Tusk(
-        id: "21",
-        description: "TU pues CONNNAARRDDD !!!!",
-        profile: profile,
-        publishedAt: DateTime(2023, 02, 11, 12, 52),
-        nbComments: 3,
-        nbDislikes: 20,
-        nbLikes: 13786,
-      )
     ]);
     return _controller.stream;
   }
@@ -59,6 +50,12 @@ class LocalTuskRepository implements TuskRepository {
   @override
   Stream<List<Tusk>> getTusksByUser() {
     // TODO: implement getTusksByUser
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> resetPassword(String email) {
+    // TODO: implement resetPassword
     throw UnimplementedError();
   }
 
