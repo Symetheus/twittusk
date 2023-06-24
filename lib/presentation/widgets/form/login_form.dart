@@ -6,19 +6,19 @@ import '../../../theme/dimens.dart';
 import '../text_input_solid.dart';
 
 class LoginForm extends StatelessWidget {
+  final Widget connectionWidget;
   final TextEditingController? emailController;
   final TextEditingController? passwordController;
-  final VoidCallback? onConnection;
   final VoidCallback? onRegister;
   final VoidCallback? onForgotPassword;
   final VoidCallback? onConnectionWithGoogle;
   final VoidCallback? onConnectionWithTwitter;
 
-  LoginForm({
+  const LoginForm({
     super.key,
+    required this.connectionWidget,
     this.emailController,
     this.passwordController,
-    this.onConnection,
     this.onRegister,
     this.onForgotPassword,
     this.onConnectionWithGoogle,
@@ -60,11 +60,7 @@ class LoginForm extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 height: 50,
-                child: SolidButton(
-                  label: "Continue",
-                  onPressed: onConnection,
-                  backgroundColor: Theme.of(context).primaryColor,
-                ),
+                child: connectionWidget,
               ),
               const SizedBox(height: 20),
               const Text("or"),

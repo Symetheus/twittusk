@@ -1,10 +1,17 @@
 import 'dart:async';
+import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:twittusk/domain/repository/tusk_repository.dart';
 import 'package:twittusk/domain/models/user.dart';
 import 'package:twittusk/domain/models/tusk.dart';
 
 class LocalTuskRepository implements TuskRepository {
   final StreamController<List<Tusk>> _controller = StreamController<List<Tusk>>();
+
+  @override
+  Future<auth.UserCredential> signIn(String email, String password) {
+    // TODO: implement signIn
+    throw UnimplementedError();
+  }
 
   @override
   Stream<List<Tusk>> getTusks() {
@@ -55,4 +62,6 @@ class LocalTuskRepository implements TuskRepository {
     // TODO: implement getTusksByUser
     throw UnimplementedError();
   }
+
+
 }
