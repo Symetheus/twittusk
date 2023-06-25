@@ -19,9 +19,9 @@ class UserDto {
     this.bio = "",
   });
 
-  factory UserDto.fromJson(Map<String, dynamic> json) {
+  factory UserDto.fromJson(Map<String, dynamic> json, String id) {
     return UserDto(
-      uid: json['uid'],
+      uid: id,
       username: json['username'],
       arobase: json['arobase'],
       email: json['email'],

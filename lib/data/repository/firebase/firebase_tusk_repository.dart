@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:twittusk/data/data_source/tusk_data_source.dart';
 import 'package:twittusk/domain/models/user.dart';
 import 'package:twittusk/domain/repository/tusk_repository.dart';
@@ -6,6 +8,7 @@ import '../../../domain/models/user_session.dart';
 import '../../dto/user_dto.dart';
 
 class FirebaseTuskRepository implements TuskRepository {
+  final _tuskStreamController = StreamController<List<Tusk>>.broadcast();
   final TuskDataSource _dataSource;
 
   FirebaseTuskRepository(this._dataSource);
@@ -29,8 +32,24 @@ class FirebaseTuskRepository implements TuskRepository {
 
   @override
   Stream<List<Tusk>> getTusks() {
-    // TODO: implement getTusks
-    throw UnimplementedError();
+    final stream = _dataSource.getTusks().map((postDtoList) {
+      return postDtoList.map((e) => e.toTusk()).toList();
+    });
+
+    stream.listen(
+          (data) {
+        if (!_tuskStreamController.isClosed) {
+          _tuskStreamController.add(data);
+        }
+      },
+      onError: (error) {
+        if (!_tuskStreamController.isClosed) {
+          _tuskStreamController.addError(error);
+        }
+      },
+    );
+
+    return _tuskStreamController.stream;
   }
 
   @override
@@ -61,8 +80,5 @@ class FirebaseTuskRepository implements TuskRepository {
     final user = await _dataSource.getUserById(uid);
     return user?.toUser();
   }
-
-
-
 
 }

@@ -40,7 +40,9 @@ class MyApp extends StatelessWidget {
         providers: [
           BlocProvider<FeedBloc>(
             create: (context) => FeedBloc(
-              context.read<TuskRepository>(),
+              FirebaseTuskRepository(
+                FirebaseTuskDataSource(),
+              ),
             ),
           ),
           BlocProvider<LoginBloc>(
