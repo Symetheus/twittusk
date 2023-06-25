@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:twittusk/domain/exceptions/auth_excpetion.dart';
 import 'package:twittusk/presentation/screens/modals/alert_modal.dart';
+import 'package:twittusk/presentation/widgets/form/register_form.dart';
 import '../../../../provider/auth_provider.dart';
 import '../../../../theme/dimens.dart';
 import '../../../widgets/form/login_form.dart';
@@ -22,6 +23,7 @@ class _LoginScreenState extends State<LoginScreen> {
   late Widget currentForm;
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final TextEditingController confirmPasswordController = TextEditingController();
 
   @override
   void initState() {
@@ -33,6 +35,7 @@ class _LoginScreenState extends State<LoginScreen> {
       onConnectionWithGoogle: () => _signInWithGoogle(context),
       onConnectionWithTwitter: () => _signInWithTwitter(context),
       onForgotPassword: () => _onForgotPassword(context),
+      onRegister: () => _changeToRegisterForm(context),
     );
   }
 
@@ -189,6 +192,19 @@ class _LoginScreenState extends State<LoginScreen> {
         onConnectionWithGoogle: () => _signInWithGoogle(context),
         onConnectionWithTwitter: () => _signInWithTwitter(context),
         onForgotPassword: () => _onForgotPassword(context),
+        onRegister: () => _changeToRegisterForm(context),
+      );
+    });
+  }
+
+  void _changeToRegisterForm(BuildContext context) {
+    passwordController.clear();
+    setState(() {
+      currentForm = RegisterForm(
+        emailController: emailController,
+        passwordController: passwordController,
+        confirmPasswordController: confirmPasswordController,
+        onCancel: () => _changeToLoginForm(context),
       );
     });
   }

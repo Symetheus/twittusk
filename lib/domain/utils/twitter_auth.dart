@@ -1,5 +1,7 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import '../models/user.dart';
 
 abstract class TwitterAuth {
-  Future<UserCredential> signInWithTwitter();
+  Future<User> signInWithTwitter();
+
+  Future<User> signUpWithTwitter();
 }
