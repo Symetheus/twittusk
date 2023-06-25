@@ -5,7 +5,7 @@ enum LoginStatus { initial, loading, success, successResetPassword, error }
 class LoginState {
   final LoginStatus status;
   final String errorMessage;
-  final User? user;
+  final UserSession? user;
 
   LoginState({
     this.status = LoginStatus.initial,
@@ -24,7 +24,7 @@ class LoginState {
   LoginState copyWith({
     LoginStatus? status,
     String? errorMessage,
-    User? user,
+    UserSession? user,
   }) {
     return LoginState(
       status: status ?? this.status,

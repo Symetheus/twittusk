@@ -2,10 +2,9 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:twittusk/domain/exceptions/auth_excpetion.dart';
 import 'package:twittusk/presentation/screens/modals/alert_modal.dart';
+import 'package:twittusk/presentation/screens/ui/nav_screen/nav_screen.dart';
 import 'package:twittusk/presentation/widgets/form/register_form.dart';
-import '../../../../provider/auth_provider.dart';
 import '../../../../theme/dimens.dart';
 import '../../../widgets/form/login_form.dart';
 import '../../../widgets/form/reset_password_form.dart';
@@ -26,6 +25,7 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   late Widget currentForm;
+  final TextEditingController usernameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController = TextEditingController();
@@ -111,7 +111,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           );
                           _changeToLoginForm(context);
                         } else if (state.status == LoginStatus.success) {
-                          LoginScreen.navigate(context);
+                          NavScreen.navigate(context);
                         }
                       },
                       builder: (context, state) {
@@ -140,32 +140,11 @@ class _LoginScreenState extends State<LoginScreen> {
   // ========================= CALLBACKS =========================
 
   void _signInWithGoogle(BuildContext context) async {
-    try {
-      final user = await AuthProvider.of(context).googleAuth.signInWithGoogle();
-      if(user != null) {
-        print("User email ==> ${user.email}");
-      }
-    } on AuthException catch (e) {
-      AlertModal.show(
-        context: context,
-        title: "Invalid",
-        message: e.message,
-        onOk: () => Navigator.of(context).pop(),
-      );
-    }
+    BlocProvider.of<LoginBloc>(context).add(SignInGoogleEvent());
   }
 
   void _signInWithTwitter(BuildContext context) async {
-    try {
-      await AuthProvider.of(context).twitterAuth.signInWithTwitter();
-    } on AuthException catch (e) {
-      AlertModal.show(
-        context: context,
-        title: "Invalid",
-        message: e.message,
-        onOk: () => Navigator.of(context).pop(),
-      );
-    }
+    BlocProvider.of<LoginBloc>(context).add(SignInTwitterEvent());
   }
 
   void _onConnection(BuildContext context) {
@@ -193,6 +172,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void _onRegister(BuildContext context) {
     BlocProvider.of<LoginBloc>(context).add(SignUpEvent(
+      username: usernameController.text,
       email: emailController.text,
       password: passwordController.text,
       confirmPassword: confirmPasswordController.text,

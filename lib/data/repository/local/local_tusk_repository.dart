@@ -2,12 +2,13 @@ import 'dart:async';
 import 'package:twittusk/domain/repository/tusk_repository.dart';
 import 'package:twittusk/domain/models/user.dart';
 import 'package:twittusk/domain/models/tusk.dart';
+import '../../../domain/models/user_session.dart';
 
 class LocalTuskRepository implements TuskRepository {
   final StreamController<List<Tusk>> _controller = StreamController<List<Tusk>>();
 
   @override
-  Future<User> signIn(String email, String password) {
+  Future<UserSession> signIn(String email, String password) {
     // TODO: implement signIn
     throw UnimplementedError();
   }
@@ -60,8 +61,32 @@ class LocalTuskRepository implements TuskRepository {
   }
 
   @override
-  Future<User> signUp(String email, String password) {
+  Future<UserSession> signUp(String username, String email, String password) {
     // TODO: implement signUp
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> addUser(User user) {
+    // TODO: implement addUser
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<UserSession> signInWithGoogle() {
+    // TODO: implement signInWithGoogle
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<UserSession> signInWithTwitter() {
+    // TODO: implement signInWithTwitter
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<User> getUserById(String uid) {
+    // TODO: implement getUserById
     throw UnimplementedError();
   }
 

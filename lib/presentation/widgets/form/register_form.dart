@@ -5,6 +5,7 @@ import '../buttons/solid_button.dart';
 import '../text_input_solid.dart';
 
 class RegisterForm extends StatelessWidget {
+  final TextEditingController? usernameController;
   final TextEditingController? emailController;
   final TextEditingController? passwordController;
   final TextEditingController? confirmPasswordController;
@@ -15,6 +16,7 @@ class RegisterForm extends StatelessWidget {
 
   const RegisterForm({
     super.key,
+    this.usernameController,
     this.emailController,
     this.passwordController,
     this.confirmPasswordController,
@@ -30,6 +32,11 @@ class RegisterForm extends StatelessWidget {
       padding: const EdgeInsets.all(30.0),
       child: Column(
         children: [
+          TextInputSolid(
+            hintText: "Pseudo",
+            controller: usernameController,
+          ),
+          const SizedBox(height: 20),
           TextInputSolid(
             hintText: "Email",
             controller: emailController,

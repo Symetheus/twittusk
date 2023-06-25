@@ -13,6 +13,10 @@ class SignInEvent extends LoginEvent {
   });
 }
 
+class SignInGoogleEvent extends LoginEvent {}
+
+class SignInTwitterEvent extends LoginEvent {}
+
 class ResetPasswordEvent extends LoginEvent {
   final String email;
 
@@ -23,10 +27,12 @@ class ResetPasswordEvent extends LoginEvent {
 
 class SignUpEvent extends LoginEvent {
   final String email;
+  final String username;
   final String password;
   final String confirmPassword;
 
   SignUpEvent({
+    required this.username,
     required this.email,
     required this.password,
     required this.confirmPassword,
