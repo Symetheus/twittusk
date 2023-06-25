@@ -13,6 +13,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   LoginBloc(this._repository) : super(LoginState.initial()) {
     on<SignInEvent>(_onConnection);
     on<ResetPasswordEvent>(_onResetPassword);
+    on<SignUpEvent>(_onSignUp);
   }
 
   void _onConnection(SignInEvent event, Emitter<LoginState> emit) async {
@@ -33,5 +34,20 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     } catch(e) {
       emit(state.copyWith(status: LoginStatus.error, errorMessage: e.toString()));
     }
+  }
+
+  void _onSignUp(SignUpEvent event, Emitter<LoginState> emit) async {
+    emit(state.copyWith(status: LoginStatus.loading));
+    if(event.password != event.confirmPassword) {
+      emit(state.copyWith(status: LoginStatus.error, errorMessage: 'Passwords do not match'));
+    } else {
+      try {
+        final user = await _repository.signUp(event.email, event.password);
+        emit(state.copyWith(status: LoginStatus.success, user: user));
+      } catch(e) {
+        emit(state.copyWith(status: LoginStatus.error, errorMessage: e.toString()));
+      }
+    }
+
   }
 }

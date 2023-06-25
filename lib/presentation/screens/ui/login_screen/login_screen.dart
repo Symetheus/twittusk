@@ -186,6 +186,13 @@ class _LoginScreenState extends State<LoginScreen> {
     ));
   }
 
+  void _onRegister(BuildContext context) {
+    BlocProvider.of<LoginBloc>(context).add(SignUpEvent(
+      email: emailController.text,
+      password: passwordController.text,
+      confirmPassword: confirmPasswordController.text,
+    ));
+  }
 
   // ========================= UPDATE FORM =========================
 
@@ -213,6 +220,7 @@ class _LoginScreenState extends State<LoginScreen> {
         onCancel: () => _changeToLoginForm(context),
         onSignUpWithGoogle: () => _signInWithGoogle(context),
         onSignUpWithTwitter: () => _signInWithTwitter(context),
+        onSignUp: () => _onRegister(context),
       );
     });
   }

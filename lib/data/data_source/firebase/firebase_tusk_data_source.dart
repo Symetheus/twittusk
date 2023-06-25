@@ -7,7 +7,16 @@ class FirebaseTuskDataSource implements TuskDataSource {
 
   @override
   Future<UserDto> signIn(String email, String password) async {
-    UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+    final userCredential = await _auth.signInWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+    return UserDto.fromUserCredential(userCredential);
+  }
+
+  @override
+  Future<UserDto> signUp(String email, String password) async {
+    final userCredential = await _auth.createUserWithEmailAndPassword(
       email: email,
       password: password,
     );
@@ -18,5 +27,4 @@ class FirebaseTuskDataSource implements TuskDataSource {
   Future<void> resetPassword(String email) async {
     await _auth.sendPasswordResetEmail(email: email);
   }
-
 }

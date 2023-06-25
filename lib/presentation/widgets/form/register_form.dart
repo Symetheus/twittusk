@@ -44,7 +44,7 @@ class RegisterForm extends StatelessWidget {
           TextInputSolid(
             hintText: "Confirm your password",
             obscureText: true,
-            controller: passwordController,
+            controller: confirmPasswordController,
           ),
           const SizedBox(height: 20),
           SizedBox(

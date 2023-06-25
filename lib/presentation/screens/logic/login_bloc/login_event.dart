@@ -20,3 +20,15 @@ class ResetPasswordEvent extends LoginEvent {
     required this.email,
   });
 }
+
+class SignUpEvent extends LoginEvent {
+  final String email;
+  final String password;
+  final String confirmPassword;
+
+  SignUpEvent({
+    required this.email,
+    required this.password,
+    required this.confirmPassword,
+  });
+}

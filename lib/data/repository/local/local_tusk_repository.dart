@@ -59,5 +59,11 @@ class LocalTuskRepository implements TuskRepository {
     throw UnimplementedError();
   }
 
+  @override
+  Future<User> signUp(String email, String password) {
+    // TODO: implement signUp
+    throw UnimplementedError();
+  }
+
 
 }

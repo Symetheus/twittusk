@@ -15,6 +15,12 @@ class FirebaseTuskRepository implements TuskRepository {
   }
 
   @override
+  Future<User> signUp(String email, String password) async {
+    final user = await _dataSource.signUp(email, password);
+    return user.toUser();
+  }
+
+  @override
   Future<void> resetPassword(String email) async {
     await _dataSource.resetPassword(email);
   }
@@ -30,6 +36,8 @@ class FirebaseTuskRepository implements TuskRepository {
     // TODO: implement getTusksByUser
     throw UnimplementedError();
   }
+
+
 
 
 }
