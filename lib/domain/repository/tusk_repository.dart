@@ -1,5 +1,6 @@
 import 'package:twittusk/domain/models/tusk.dart';
 import 'package:twittusk/domain/models/user_session.dart';
+import '../models/like.dart';
 import '../models/user.dart';
 
 abstract class TuskRepository {
@@ -20,4 +21,10 @@ abstract class TuskRepository {
   Stream<List<Tusk>> getTusks();
 
   Stream<List<Tusk>> getTusksByUser();
+
+  Future<List<Like>> getMyLikesByTusk(String tuskId);
+
+  Future<void> addLike(String tuskId, bool isLiked);
+
+  Future<void> removeLike(String likeId, String tuskId);
 }

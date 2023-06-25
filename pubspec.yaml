@@ -84,8 +84,10 @@ flutter:
     # Icons
     - lib/assets/icons/account.svg
     - lib/assets/icons/dislike.svg
+    - lib/assets/icons/dislike_selected.svg
     - lib/assets/icons/home.svg
     - lib/assets/icons/like.svg
+    - lib/assets/icons/like_selected.svg
     - lib/assets/icons/share.svg
     - lib/assets/icons/tusk-solid.svg
     - lib/assets/icons/comment.svg

@@ -34,7 +34,7 @@ class TuskDto {
     );
   }
 
-  Tusk toTusk() {
+  Tusk toTusk(String uidCurrentUser) {
     return Tusk(
       id: uid,
       description: description,
@@ -44,6 +44,8 @@ class TuskDto {
       nbLikes: likes.where((e) => e.isLiked).length,
       nbDislikes: likes.where((e) => !e.isLiked).length,
       nbComments: comments.length,
+      isLiked: likes.any((e) => e.user.uid == uidCurrentUser && e.isLiked),
+      isDisliked: likes.any((e) => e.user.uid == uidCurrentUser && !e.isLiked),
     );
   }
 }

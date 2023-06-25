@@ -1,10 +1,12 @@
 import 'dart:async';
 
 import 'package:twittusk/data/data_source/tusk_data_source.dart';
+import 'package:twittusk/domain/models/like.dart';
 import 'package:twittusk/domain/models/user.dart';
 import 'package:twittusk/domain/repository/tusk_repository.dart';
 import '../../../domain/models/tusk.dart';
 import '../../../domain/models/user_session.dart';
+import '../../dto/like_dto.dart';
 import '../../dto/user_dto.dart';
 
 class FirebaseTuskRepository implements TuskRepository {
@@ -20,7 +22,8 @@ class FirebaseTuskRepository implements TuskRepository {
   }
 
   @override
-  Future<UserSession> signUp(String username, String email, String password) async {
+  Future<UserSession> signUp(
+      String username, String email, String password) async {
     final user = await _dataSource.signUp(username, email, password);
     return user.toUserSession();
   }
@@ -32,22 +35,11 @@ class FirebaseTuskRepository implements TuskRepository {
 
   @override
   Stream<List<Tusk>> getTusks() {
-    final stream = _dataSource.getTusks().map((postDtoList) {
-      return postDtoList.map((e) => e.toTusk()).toList();
+    _dataSource.getTusks().listen((data) async {
+      final user = await _dataSource.getCurrentUser();
+      _tuskStreamController
+          .add(data.map((e) => e.toTusk(user?.uid ?? "")).toList());
     });
-
-    stream.listen(
-          (data) {
-        if (!_tuskStreamController.isClosed) {
-          _tuskStreamController.add(data);
-        }
-      },
-      onError: (error) {
-        if (!_tuskStreamController.isClosed) {
-          _tuskStreamController.addError(error);
-        }
-      },
-    );
 
     return _tuskStreamController.stream;
   }
@@ -81,4 +73,27 @@ class FirebaseTuskRepository implements TuskRepository {
     return user?.toUser();
   }
 
+  @override
+  Future<void> addLike(String tuskId, bool isLiked) async {
+    final user = await _dataSource.getCurrentUser();
+    final like = LikeDto(uid: "", isLiked: isLiked);
+    like.user = user!;
+    await _dataSource.addLikeTusk(like, tuskId);
+  }
+
+  @override
+  Future<List<Like>> getMyLikesByTusk(String tuskId) async {
+    final user = await _dataSource.getCurrentUser();
+    final likes = await _dataSource.getLikesByTusk(tuskId);
+    return likes
+        .map((e) => e.toLike())
+        .toList()
+        .where((e) => e.user.uid == user?.uid)
+        .toList();
+  }
+
+  @override
+  Future<void> removeLike(String likeId, String tuskId) async {
+    await _dataSource.removeLikeTusk(likeId, tuskId);
+  }
 }

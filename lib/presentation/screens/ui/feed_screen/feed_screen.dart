@@ -28,7 +28,11 @@ class FeedScreen extends StatelessWidget {
                 itemBuilder: (context, index) {
                   return Padding(
                     padding: const EdgeInsets.only(top: Dimens.minPadding),
-                    child: TuskItem(tusk: state.tusks[index]),
+                    child: TuskItem(
+                        tusk: state.tusks[index],
+                        onTapLike: () => _onLikeOrDislike(context, state.tusks[index].id, true),
+                        onTapDislike: () => _onLikeOrDislike(context, state.tusks[index].id, false),
+                    ),
                   );
                 },
               );
@@ -50,5 +54,12 @@ class FeedScreen extends StatelessWidget {
   }
 
   void _onPressed() {
+  }
+
+  void _onLikeOrDislike(BuildContext context, String uid, bool isLiked) {
+    BlocProvider.of<FeedBloc>(context).add(FeedLikeEvent(
+      tuskId: uid,
+      isLiked: isLiked,
+    ));
   }
 }

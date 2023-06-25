@@ -1,5 +1,7 @@
 import 'package:twittusk/data/dto/user_dto.dart';
 
+import '../../domain/models/like.dart';
+
 class LikeDto {
   final String uid;
   final bool isLiked;
@@ -15,5 +17,19 @@ class LikeDto {
       uid: id,
       isLiked: json['isLiked'],
     );
+  }
+
+  Like toLike() {
+    return Like(
+      id: uid,
+      isLiked: isLiked,
+      user: user.toUser(),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'isLiked': isLiked,
+    };
   }
 }

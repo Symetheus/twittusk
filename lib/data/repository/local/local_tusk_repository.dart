@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:twittusk/domain/models/like.dart';
 import 'package:twittusk/domain/repository/tusk_repository.dart';
 import 'package:twittusk/domain/models/user.dart';
 import 'package:twittusk/domain/models/tusk.dart';
@@ -87,6 +88,24 @@ class LocalTuskRepository implements TuskRepository {
   @override
   Future<User> getUserById(String uid) {
     // TODO: implement getUserById
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> addLike(String tuskId, bool isLiked) {
+    // TODO: implement addLike
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<List<Like>> getMyLikesByTusk(String tuskId) {
+    // TODO: implement getLikesByTusk
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> removeLike(String likeId, String tuskId) {
+    // TODO: implement removeLike
     throw UnimplementedError();
   }
 

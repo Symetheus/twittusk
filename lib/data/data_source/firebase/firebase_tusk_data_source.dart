@@ -133,4 +133,45 @@ class FirebaseTuskDataSource implements TuskDataSource {
     final user = await doc.get();
     return UserDto.fromJson(user.data() as Map<String, dynamic>, user.id);
   }
+
+  @override
+  Future<UserDto?> getCurrentUser() async {
+    final user = _auth.currentUser;
+    if(user == null) {
+      return null;
+    }
+    final userDoc = await _firestore.collection("users").doc(user.uid).get();
+    if(!userDoc.exists) {
+      return null;
+    }
+    return UserDto.fromJson(userDoc.data()!, userDoc.id);
+  }
+
+  @override
+  Future<List<LikeDto>> getLikesByTusk(String tuskId) async {
+    final tusk = FirebaseFirestore.instance.collection('tusks').doc(tuskId);
+    final likes = await tusk.collection("likes").get();
+    final List<LikeDto> likeList = [];
+    for (var doc in likes.docs) {
+      final like = LikeDto.fromJson(doc.data(), doc.id);
+      like.user = await _getUserFromDocumentRef(doc.data()["user"]);
+      likeList.add(like);
+    }
+    return likeList;
+  }
+
+  @override
+  Future<void> addLikeTusk(LikeDto like, String tuskId) async {
+    final tusk = FirebaseFirestore.instance.collection('tusks').doc(tuskId);
+    final json = like.toJson();
+    json["user"] = _firestore.collection("users").doc(like.user.uid);
+    tusk.collection("likes").add(json);
+  }
+
+  @override
+  Future<void> removeLikeTusk(String likeId, String tuskId) {
+    final tusk = FirebaseFirestore.instance.collection('tusks').doc(tuskId);
+    return tusk.collection("likes").doc(likeId).delete();
+  }
+
 }

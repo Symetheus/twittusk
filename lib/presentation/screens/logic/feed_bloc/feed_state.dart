@@ -1,6 +1,6 @@
 part of 'feed_bloc.dart';
 
-enum FeedStatus { initial, loading, success, error }
+enum FeedStatus { initial, loading, actionLoading, success, actionSuccess, error }
 
 class FeedState {
   final List<Tusk> tusks;
