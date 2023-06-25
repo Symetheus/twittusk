@@ -116,7 +116,10 @@ class _LoginScreenState extends State<LoginScreen> {
                           );
                         }
 
-                        return currentForm;
+                        return SingleChildScrollView(child: Padding(
+                          padding: const EdgeInsets.only(bottom: 10.0),
+                          child: currentForm,
+                        ));
                       },
                     ),
                   ],
@@ -133,7 +136,10 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void _signInWithGoogle(BuildContext context) async {
     try {
-      await AuthProvider.of(context).googleAuth.signInWithGoogle();
+      final user = await AuthProvider.of(context).googleAuth.signInWithGoogle();
+      if(user != null) {
+        print("User email ==> ${user.email}");
+      }
     } on AuthException catch (e) {
       AlertModal.show(
         context: context,
@@ -205,6 +211,8 @@ class _LoginScreenState extends State<LoginScreen> {
         passwordController: passwordController,
         confirmPasswordController: confirmPasswordController,
         onCancel: () => _changeToLoginForm(context),
+        onSignUpWithGoogle: () => _signInWithGoogle(context),
+        onSignUpWithTwitter: () => _signInWithTwitter(context),
       );
     });
   }

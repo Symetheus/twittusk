@@ -6,8 +6,8 @@ extension UserCredentialMapping on auth.UserCredential {
   User toUser() {
     return User(
       uid: user!.uid,
-      email: user!.email!,
-      username: user!.email!,
+      email: user!.email ?? '',
+      username: user!.displayName ?? '',
       arobase: '',
       profilePicUri: '',
       bannerPicUri: '',

@@ -7,6 +7,7 @@ import '../../exceptions/auth_excpetion.dart';
 import '../../models/user.dart';
 
 class FirebaseGoogleAuth implements GoogleAuth {
+  final auth.FirebaseAuth _firebaseAuth = auth.FirebaseAuth.instance;
 
   @override
   Future<User> signInWithGoogle() async {
@@ -17,7 +18,7 @@ class FirebaseGoogleAuth implements GoogleAuth {
         accessToken: googleAuth?.accessToken,
         idToken: googleAuth?.idToken,
       );
-      final credentials =  await auth.FirebaseAuth.instance.signInWithCredential(credential);
+      final credentials =  await _firebaseAuth.signInWithCredential(credential);
       return credentials.toUser();
     } on auth.FirebaseAuthException catch (e) {
       if(e.code == 'account-exists-with-different-credential') {
@@ -27,20 +28,6 @@ class FirebaseGoogleAuth implements GoogleAuth {
       } else {
         throw AuthException(e.message ?? 'An error occurred while accessing the firebase auth.');
       }
-    } on PlatformException catch(e) {
-      if(e.code == "sign_in_failed") {
-        throw AuthException('This account does not exist.');
-      } else {
-        throw AuthException(e.message ?? 'An error occurred while accessing the firebase auth.');
-      }
     }
   }
-
-  @override
-  Future<User> signUpWithGoogle() {
-    // TODO: implement signUpWithGoogle
-    throw UnimplementedError();
-  }
-
-
 }
