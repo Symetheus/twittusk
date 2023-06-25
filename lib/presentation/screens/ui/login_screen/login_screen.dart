@@ -12,8 +12,13 @@ import '../../../widgets/form/reset_password_form.dart';
 import '../../logic/login_bloc/login_bloc.dart';
 
 class LoginScreen extends StatefulWidget {
+  static const String routeName = '/login-screen';
 
-  LoginScreen({super.key});
+  static void navigate(BuildContext context) {
+    Navigator.pushNamed(context, routeName);
+  }
+
+  const LoginScreen({super.key});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -106,7 +111,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           );
                           _changeToLoginForm(context);
                         } else if (state.status == LoginStatus.success) {
-                          print("User email ==> ${state.user!.email}");
+                          LoginScreen.navigate(context);
                         }
                       },
                       builder: (context, state) {

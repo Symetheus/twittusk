@@ -4,7 +4,13 @@ import 'package:twittusk/presentation/widgets/bottom_nav_bar/bottom_nav_bar.dart
 import '../../../widgets/bottom_nav_bar/bottom_nav_bar_item.dart';
 
 class NavScreen extends StatefulWidget {
-  NavScreen({super.key});
+  static const String routeName = '/nav-screen';
+
+  static void navigate(BuildContext context) {
+    Navigator.pushNamed(context, routeName);
+  }
+
+  const NavScreen({super.key});
 
   @override
   State<NavScreen> createState() => _NavScreenState();
