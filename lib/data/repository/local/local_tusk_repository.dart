@@ -109,5 +109,11 @@ class LocalTuskRepository implements TuskRepository {
     throw UnimplementedError();
   }
 
+  @override
+  Future<Uri> generateTuskDynamicLink(String tuskId) {
+    // TODO: implement generateTuskDynamicLink
+    throw UnimplementedError();
+  }
+
 
 }

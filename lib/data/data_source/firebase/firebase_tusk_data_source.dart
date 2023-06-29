@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:twitter_login/twitter_login.dart';
@@ -15,6 +16,7 @@ class FirebaseTuskDataSource implements TuskDataSource {
   final _tuskStreamController = StreamController<List<TuskDto>>();
   final _auth = FirebaseAuth.instance;
   final _firestore = FirebaseFirestore.instance;
+  final _dynamicLinks = FirebaseDynamicLinks.instance;
 
   @override
   Future<UserSessionDto> signIn(String email, String password) async {
@@ -172,6 +174,32 @@ class FirebaseTuskDataSource implements TuskDataSource {
   Future<void> removeLikeTusk(String likeId, String tuskId) {
     final tusk = FirebaseFirestore.instance.collection('tusks').doc(tuskId);
     return tusk.collection("likes").doc(likeId).delete();
+  }
+
+  @override
+  Future<Uri> generateTuskDynamicLink(String tuskId) async {
+    final DynamicLinkParameters parameters = DynamicLinkParameters(
+      uriPrefix: 'https://twittusk.page.link',
+      link: Uri.parse('https://twittusk.com/tusk/$tuskId'),
+      socialMetaTagParameters: SocialMetaTagParameters(
+        title: 'Twittusk',
+        description: 'Twittusk',
+        imageUrl: Uri.parse('https://cap.img.pmdstatic.net/fit/https.3A.2F.2Fi.2Epmdstatic.2Enet.2Fcap.2F2023.2F05.2F19.2F3716e4a3-1381-44ab-9d21-b350ebba33ea.2Ejpeg/1200x630/background-color/ffffff/quality/70/elon-musk-decouvrez-les-secrets-intrigants-de-lhomme-le-plus-puissant-de-la-planete-1468904.jpg'),
+      ),
+      androidParameters: AndroidParameters(
+        packageName: 'com.yummy.twittusk',
+        fallbackUrl: Uri.parse('https://twittusk.com'),
+      ),
+      iosParameters: IOSParameters(
+        bundleId: 'com.yummy.twittusk ',
+        fallbackUrl: Uri.parse('https://twittusk.com'),
+      ),
+    );
+
+    final ShortDynamicLink shortLink = await _dynamicLinks.buildShortLink(
+        parameters
+    );
+    return shortLink.shortUrl;
   }
 
 }

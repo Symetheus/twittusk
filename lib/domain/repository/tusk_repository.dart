@@ -27,4 +27,6 @@ abstract class TuskRepository {
   Future<void> addLike(String tuskId, bool isLiked);
 
   Future<void> removeLike(String likeId, String tuskId);
+
+  Future<Uri> generateTuskDynamicLink(String tuskId);
 }

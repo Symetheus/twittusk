@@ -96,4 +96,9 @@ class FirebaseTuskRepository implements TuskRepository {
   Future<void> removeLike(String likeId, String tuskId) async {
     await _dataSource.removeLikeTusk(likeId, tuskId);
   }
+
+  @override
+  Future<Uri> generateTuskDynamicLink(String tuskId) {
+    return _dataSource.generateTuskDynamicLink(tuskId);
+  }
 }

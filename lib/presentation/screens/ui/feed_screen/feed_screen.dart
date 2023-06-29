@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:share/share.dart';
 import 'package:twittusk/presentation/screens/logic/feed_bloc/feed_bloc.dart';
 import 'package:twittusk/presentation/widgets/tusk_item.dart';
 import 'package:twittusk/theme/dimens.dart';
@@ -13,7 +14,19 @@ class FeedScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     BlocProvider.of<FeedBloc>(context).add(FeedFetchEvent());
     return Scaffold(
-      body: BlocBuilder<FeedBloc, FeedState>(
+      body: BlocConsumer<FeedBloc, FeedState>(
+        listener: (context, state) {
+          if (state.status == FeedStatus.error) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(state.errorMessage),
+                backgroundColor: Theme.of(context).customColors.error,
+              ),
+            );
+          } else if (state.status == FeedStatus.dynamicLinkSuccess) {
+            Share.share(state.dynamicLink!.toString());
+          }
+        },
         builder: (context, state) {
           switch (state.status) {
             case FeedStatus.loading:
@@ -32,6 +45,7 @@ class FeedScreen extends StatelessWidget {
                         tusk: state.tusks[index],
                         onTapLike: () => _onLikeOrDislike(context, state.tusks[index].id, true),
                         onTapDislike: () => _onLikeOrDislike(context, state.tusks[index].id, false),
+                        onTapShare: () => _onShare(context, state.tusks[index].id),
                     ),
                   );
                 },
@@ -60,6 +74,12 @@ class FeedScreen extends StatelessWidget {
     BlocProvider.of<FeedBloc>(context).add(FeedLikeEvent(
       tuskId: uid,
       isLiked: isLiked,
+    ));
+  }
+
+  void _onShare(BuildContext context, String uid) {
+    BlocProvider.of<FeedBloc>(context).add(FeedShareEvent(
+      tuskId: uid,
     ));
   }
 }

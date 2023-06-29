@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -17,6 +18,22 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: "lib/.env");
   await Firebase.initializeApp();
+  final initialLink = await FirebaseDynamicLinks.instance.getInitialLink();
+  if (initialLink != null) {
+    final Uri deepLink = initialLink.link;
+    print(deepLink.path); // TODO: handle deep link
+    //Navigator.pushNamed(context, deepLink.path);
+  }
+  FirebaseDynamicLinks.instance.onLink.listen( (pendingDynamicLinkData) {
+      if (pendingDynamicLinkData != null) {
+        final Uri deepLink = pendingDynamicLinkData.link;
+        print(deepLink.path); // TODO: handle deep link
+        //Navigator.pushNamed(context, deepLink.path);
+      }
+    },
+  );
+
+
   final homeScreen = FirebaseAuth.instance.currentUser == null
       ? const LoginScreen()
       : const NavScreen();

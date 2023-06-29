@@ -14,3 +14,11 @@ class FeedLikeEvent extends FeedEvent {
     required this.isLiked,
   });
 }
+
+class FeedShareEvent extends FeedEvent {
+  final String tuskId;
+
+  FeedShareEvent({
+    required this.tuskId,
+  });
+}

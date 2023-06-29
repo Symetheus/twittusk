@@ -27,4 +27,6 @@ abstract class TuskDataSource {
   Future<void> addLikeTusk(LikeDto like, String tuskId);
 
   Future<void> removeLikeTusk(String likeId, String tuskId);
+
+  Future<Uri> generateTuskDynamicLink(String tuskId);
 }
