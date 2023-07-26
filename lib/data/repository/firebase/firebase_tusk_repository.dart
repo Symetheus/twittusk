@@ -118,6 +118,12 @@ class FirebaseTuskRepository implements TuskRepository {
     return _tuskStreamController.stream;
   }
 
+  @override
+  Future<Tusk> getTuskById(String tuskId) async {
+    var tuskDto = await _dataSource.getById(tuskId);
+    final user = await _dataSource.getCurrentUser();
+    return tuskDto.toTusk(user?.uid ?? "");
+  }
 
 
   @override

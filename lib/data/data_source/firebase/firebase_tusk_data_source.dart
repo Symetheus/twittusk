@@ -248,4 +248,14 @@ class FirebaseTuskDataSource implements TuskDataSource {
   Future<void> logout() {
     return _auth.signOut();
   }
+
+  @override
+  Future<TuskDto> getById(String tuskId) {
+    final tuskRef = _firestore.collection('tusks').doc(tuskId);
+    return tuskRef.get().then((doc) async {
+      final tusk = TuskDto.fromJson(doc.data()!, doc.id);
+      tusk.user = await _getUserFromDocumentRef(doc.data()!["user"]);
+      return tusk;
+    });
+  }
 }

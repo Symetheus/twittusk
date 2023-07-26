@@ -38,6 +38,7 @@ abstract class TuskRepository {
 
   Stream<List<Tusk>> getCommentsForTusk(String tweetId);
 
+  Future<Tusk> getTuskById(String tuskId);
 
   Future<void> logout();
 }
