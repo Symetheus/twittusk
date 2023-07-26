@@ -205,8 +205,11 @@ class FirebaseTuskDataSource implements TuskDataSource {
         .orderBy("publishedAt", descending: true)
         .snapshots()
         .listen((snapshot) {
+          print("Get tusk by user");
       List<TuskDto> tusks = snapshot.docs.map((doc) {
-        return TuskDto.fromJson(doc.data(), user.uid);
+        final tusk = TuskDto.fromJson(doc.data(), user.uid);
+        tusk.user = user;
+        return tusk;
       }).toList();
       _tuskStreamController.add(tusks);
     });
