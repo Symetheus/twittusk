@@ -51,65 +51,46 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiRepositoryProvider(
+    return MultiBlocProvider(
       providers: [
-        RepositoryProvider<TuskRepository>(
-          create: (context) => LocalTuskRepository(),
+        BlocProvider<FeedBloc>(
+          create: (context) => FeedBloc(
+            FirebaseTuskRepository(
+              FirebaseTuskDataSource(),
+            ),
+          ),
+        ),
+        BlocProvider<LoginBloc>(
+          create: (context) => LoginBloc(
+            FirebaseTuskRepository(
+              FirebaseTuskDataSource(),
+            ),
+          ),
         ),
       ],
-      child: MultiBlocProvider(
-        providers: [
-          BlocProvider<FeedBloc>(
-            create: (context) => FeedBloc(
-              FirebaseTuskRepository(
-                FirebaseTuskDataSource(),
-              ),
-            ),
-          ),
-          BlocProvider<LoginBloc>(
-            create: (context) => LoginBloc(
-              FirebaseTuskRepository(
-                FirebaseTuskDataSource(),
-              ),
-            ),
-          ),
-          BlocProvider<CurrentUserBloc>(
-            create: (context) => CurrentUserBloc(
-              FirebaseTuskRepository(
-                FirebaseTuskDataSource(),
-              ),
-            ),
-          ),
-        ],
-        child: MaterialApp(
-            title: 'Twittusk',
-            theme: AppTheme.darkThemeData,
-            debugShowCheckedModeBanner: false,
-            routes: {
-              '/': (context) => homeScreen,
-              NavScreen.routeName: (context) => const NavScreen(),
-              LoginScreen.routeName: (context) => const LoginScreen(),
-              AddTuskScreen.routeName: (context) => const AddTuskScreen(),
-              // FeedScreen.routeName: (context) => const FeedScreen(),
-            },
-            onGenerateRoute: (settings) {
-              Widget content = const SizedBox.shrink();
+      child: MaterialApp(
+        title: 'Twittusk',
+        theme: AppTheme.darkThemeData,
+        debugShowCheckedModeBanner: false,
+        // home: ProfileFeedScreen(user: User(uid: 'uid', username: 'Elon Musk', arobase: 'ElonMusk', email: 'email', profilePicUri: 'https://www.thestreet.com/.image/ar_1:1%2Cc_fill%2Ccs_srgb%2Cfl_progressive%2Cq_auto:good%2Cw_1200/MTg4NzYwNTI4NjE5ODQxMDU2/elon-musk_4.jpg', bannerPicUri: 'https://img.phonandroid.com/2021/08/spacex-starship.jpg', bio: 'bio'),),
+        routes: {
+          '/': (context) => homeScreen,
+          NavScreen.routeName: (context) => const NavScreen(),
+          LoginScreen.routeName: (context) => const LoginScreen(),
+          // FeedScreen.routeName: (context) => const FeedScreen(),
+        },
+        onGenerateRoute: (settings) {
+          Widget content = const SizedBox.shrink();
 
-              switch (settings.name) {
-                case ProfileFeedScreen.routeName:
-                  final arguments = settings.arguments;
-                  if (arguments != null && arguments is User) {
-                    content = ProfileFeedScreen(user: arguments);
-                  }
+          switch (settings.name) {
+            case ProfileFeedScreen.routeName:
+              final arguments = settings.arguments;
+              if (arguments != null && arguments is User) {
+                content = ProfileFeedScreen(user: arguments);
               }
-              return MaterialPageRoute(builder: (context) => content);
-            }
-            /*theme: ThemeData(
-            colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-            useMaterial3: true,
-          ),*/
-
-            ),
+          }
+          return MaterialPageRoute(builder: (context) => content);
+        },
       ),
     );
   }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:twittusk/presentation/screens/ui/feed_screen/feed_screen.dart';
+import 'package:twittusk/presentation/screens/ui/profile_screen/profile_screen.dart';
 import 'package:twittusk/presentation/widgets/bottom_nav_bar/bottom_nav_bar.dart';
 import '../../../widgets/bottom_nav_bar/bottom_nav_bar_item.dart';
 
@@ -19,17 +20,26 @@ class NavScreen extends StatefulWidget {
 class _NavScreenState extends State<NavScreen> {
   int currentIndex = 0;
 
+  final screens = const [
+    FeedScreen(),
+    ProfileScreen(),
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: const FeedScreen(),
+      body: screens[currentIndex],
       bottomNavigationBar: BottomNavBar(
         onItemSelected: (index) => _onItemSelected(index, context),
-        indexSelected: 0,
+        indexSelected: currentIndex,
         items: [
           BottomNavBarItem(
             iconAsset: 'lib/assets/icons/home.svg',
             label: 'Home',
+          ),
+          BottomNavBarItem(
+            iconAsset: 'lib/assets/icons/account.svg',
+            label: 'Me',
           ),
         ],
       ),
@@ -38,7 +48,6 @@ class _NavScreenState extends State<NavScreen> {
   }
 
   void _onItemSelected(int index, BuildContext context) {
-    print(index);
     setState(() {
       currentIndex = index;
     });

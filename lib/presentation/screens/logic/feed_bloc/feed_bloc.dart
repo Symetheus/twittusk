@@ -75,7 +75,10 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
   void _fetchTusksByUser(UserFeedFetchEvent event, Emitter<FeedState> emit) async {
     emit(state.copyWith(status: FeedStatus.loading));
     try {
+      print('In IT');
       await emit.forEach(_tuskRepository.getTusksByUser(event.user), onData: (tusks) {
+        print('On data');
+        print(tusks);
         return state.copyWith(tusks: tusks, status: FeedStatus.success);
       }).catchError((error) {
         emit(state.copyWith(

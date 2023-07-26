@@ -44,7 +44,7 @@ class FirebaseTuskRepository implements TuskRepository {
 
   @override
   Stream<List<Tusk>> getTusksByUser(User user) {
-    _dataSource.getTusksByUser(UserDto.fromUser(user)).listen((data) async {
+    _dataSource.getTusksByUser(UserDto.fromUser(user)).listen((data) {
       _tuskStreamController.add(data.map((e) => e.toTusk(user.uid)).toList());
     });
     return _tuskStreamController.stream;

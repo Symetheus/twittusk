@@ -101,26 +101,24 @@ class FirebaseTuskDataSource implements TuskDataSource {
       for (var doc in snapshot.docs) {
         final tusk = TuskDto.fromJson(doc.data(), doc.id);
         tusk.user = await _getUserFromDocumentRef(doc.data()["user"]);
-        doc.reference.collection("comments").snapshots().listen((event) async {
-          tusk.comments.clear();
-          for (var i = 0; i < event.docs.length; i++) {
-            final comment = event.docs[i];
-            final commentDto = TuskDto.fromJson(comment.data(), comment.id);
-            commentDto.user = await _getUserFromDocumentRef(comment.data()["user"]);
-            tusk.comments.add(commentDto);
-            _tuskStreamController.add(tuskList);
-          }
-        });
-        doc.reference.collection("likes").snapshots().listen((event) async {
-          tusk.likes.clear();
-          for (var i = 0; i < event.docs.length; i++) {
-            final like = event.docs[i];
-            final likeDto = LikeDto.fromJson(like.data(), like.id);
-            likeDto.user = await _getUserFromDocumentRef(like.data()["user"]);
-            tusk.likes.add(likeDto);
-            _tuskStreamController.add(tuskList);
-          }
-        });
+        // Get comments
+        final commentsSnapshot = await doc.reference.collection("comments").get();
+        final comments = commentsSnapshot.docs.map((comment) async {
+          final commentDto = TuskDto.fromJson(comment.data(), comment.id);
+          commentDto.user = await _getUserFromDocumentRef(comment.data()["user"]);
+          return commentDto;
+        }).toList();
+        tusk.comments.addAll(await Future.wait(comments));
+
+        // Get likes
+        final likesSnapshot = await doc.reference.collection("likes").get();
+        final likes = likesSnapshot.docs.map((like) async {
+          final likeDto = LikeDto.fromJson(like.data(), like.id);
+          likeDto.user = await _getUserFromDocumentRef(like.data()["user"]);
+          return likeDto;
+        }).toList();
+        tusk.likes.addAll(await Future.wait(likes));
+
         tuskList.add(tusk);
       }
       _tuskStreamController.add(tuskList);
@@ -207,8 +205,11 @@ class FirebaseTuskDataSource implements TuskDataSource {
         .orderBy("publishedAt", descending: true)
         .snapshots()
         .listen((snapshot) {
+          print("Get tusk by user");
       List<TuskDto> tusks = snapshot.docs.map((doc) {
-        return TuskDto.fromJson(doc.data(), user.uid);
+        final tusk = TuskDto.fromJson(doc.data(), user.uid);
+        tusk.user = user;
+        return tusk;
       }).toList();
       _tuskStreamController.add(tusks);
     });

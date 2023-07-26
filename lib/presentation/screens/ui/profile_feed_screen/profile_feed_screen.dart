@@ -46,9 +46,15 @@ class ProfileFeedScreen extends StatelessWidget {
                       padding: const EdgeInsets.all(Dimens.minPadding),
                       itemCount: state.tusks.length,
                       itemBuilder: (context, index) {
+                        final tusk = state.tusks[index];
                         return Padding(
                           padding: const EdgeInsets.only(top: Dimens.minPadding),
-                          child: TuskItem(tusk: state.tusks[index]),
+                          child: TuskItem(
+                            tusk: state.tusks[index],
+                            onTapLike: () => _onLikeOrDislike(context, tusk.id, true),
+                            onTapDislike: () => _onLikeOrDislike(context, tusk.id, false),
+                            onTapShare: () => _onShare(context, tusk.id),
+                          ),
                         );
                       },
                     ),
@@ -59,5 +65,18 @@ class ProfileFeedScreen extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  void _onLikeOrDislike(BuildContext context, String uid, bool isLiked) {
+    BlocProvider.of<FeedBloc>(context).add(FeedLikeEvent(
+      tuskId: uid,
+      isLiked: isLiked,
+    ));
+  }
+
+  void _onShare(BuildContext context, String uid) {
+    BlocProvider.of<FeedBloc>(context).add(FeedShareEvent(
+      tuskId: uid,
+    ));
   }
 }
