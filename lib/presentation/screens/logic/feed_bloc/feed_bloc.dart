@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/foundation.dart';
 import 'package:twittusk/domain/models/tusk.dart';
 import 'package:twittusk/domain/models/user.dart';
+import 'package:twittusk/domain/repository/notification_repository.dart';
 import 'package:twittusk/domain/repository/tusk_repository.dart';
 
 part 'feed_event.dart';
@@ -9,19 +10,23 @@ part 'feed_event.dart';
 part 'feed_state.dart';
 
 class FeedBloc extends Bloc<FeedEvent, FeedState> {
-  final TuskRepository _tuskRepository;
+  final TuskRepository tuskRepository;
+  final NotificationRepository notificationRepository;
 
-  FeedBloc(this._tuskRepository) : super(FeedState.initial()) {
-    on<FeedFetchEvent>(_fetchTusks);
-    on<UserFeedFetchEvent>(_fetchTusksByUser);
-    on<FeedLikeEvent>(_likeTusk);
-    on<FeedShareEvent>(_shareTusk);
+  FeedBloc({
+    required this.tuskRepository,
+    required this.notificationRepository,
+  }) : super(FeedState.initial()) {
+      on<FeedFetchEvent>(_fetchTusks);
+      on<UserFeedFetchEvent>(_fetchTusksByUser);
+      on<FeedLikeEvent>(_likeTusk);
+      on<FeedShareEvent>(_shareTusk);
   }
 
   void _fetchTusks(FeedFetchEvent event, Emitter<FeedState> emit) async {
     emit(state.copyWith(status: FeedStatus.loading));
     try {
-      await emit.forEach(_tuskRepository.getTusks(), onData: (tusks) {
+      await emit.forEach(tuskRepository.getTusks(), onData: (tusks) {
         return state.copyWith(tusks: tusks, status: FeedStatus.success);
       }).catchError((error) {
         emit(state.copyWith(
@@ -40,15 +45,22 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
   void _likeTusk(FeedLikeEvent event, Emitter<FeedState> emit) async {
     emit(state.copyWith(status: FeedStatus.actionLoading));
     try {
-      final likes = await _tuskRepository.getMyLikesByTusk(event.tuskId);
+      final likes = await tuskRepository.getMyLikesByTusk(event.tuskId);
 
       if (likes.isEmpty) {
-        await _tuskRepository.addLike(event.tuskId, event.isLiked);
+        await tuskRepository.addLike(event.tuskId, event.isLiked);
+        if(event.isLiked) {
+          await notificationRepository.sendMessageFromTuskId(
+            event.tuskId,
+            'Someone liked your tusk',
+            'Your tusk has been liked',
+          );
+        }
       } else {
         for(var like in likes) {
-          await _tuskRepository.removeLike(like.id, event.tuskId);
+          await tuskRepository.removeLike(like.id, event.tuskId);
         }
-        await _tuskRepository.addLike(event.tuskId, event.isLiked);
+        await tuskRepository.addLike(event.tuskId, event.isLiked);
       }
       emit(state.copyWith(status: FeedStatus.actionSuccess));
     } catch (e) {
@@ -62,7 +74,7 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
   void _shareTusk(FeedShareEvent event, Emitter<FeedState> emit) async {
     emit(state.copyWith(status: FeedStatus.actionLoading));
     try {
-      final link = await _tuskRepository.generateTuskDynamicLink(event.tuskId);
+      final link = await tuskRepository.generateTuskDynamicLink(event.tuskId);
       emit(state.copyWith(status: FeedStatus.dynamicLinkSuccess, dynamicLink: link));
     } catch (e) {
       emit(state.copyWith(
@@ -76,7 +88,7 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
     emit(state.copyWith(status: FeedStatus.loading));
     try {
       print('In IT');
-      await emit.forEach(_tuskRepository.getTusksByUser(event.user), onData: (tusks) {
+      await emit.forEach(tuskRepository.getTusksByUser(event.user), onData: (tusks) {
         print('On data');
         print(tusks);
         return state.copyWith(tusks: tusks, status: FeedStatus.success);

@@ -38,4 +38,6 @@ abstract class TuskDataSource {
   Future<void> addCommentToTusk(String tuskId, String comment, UserDto user);
 
   Stream<List<TuskDto>> getCommentsForTusk(String tuskId);
+
+  Future<void> logout();
 }

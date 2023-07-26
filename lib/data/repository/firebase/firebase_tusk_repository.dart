@@ -119,4 +119,10 @@ class FirebaseTuskRepository implements TuskRepository {
   }
 
 
+
+  @override
+  Future<void> logout() async {
+    await _dataSource.logout();
+  }
+
 }

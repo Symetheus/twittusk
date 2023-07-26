@@ -10,6 +10,7 @@ class Dimens {
   static const double avatarSmall = 40;
   static const double avatarLarge = 56;
   static const double avatarXXLarge = 88;
+  static const double avatarXXXLarge = 150;
 
   // These 2 dimensions reflect the dimensions defined in Flutter Material for Input widgets.
   static const double standardInputMinHeight = 50;
@@ -40,4 +41,5 @@ class Dimens {
   static const double thinDividerThickness = 1.0;
 
   static const double bannerMaxHeight = 125;
+  static const double bannerUltraHeight = 200;
 }
