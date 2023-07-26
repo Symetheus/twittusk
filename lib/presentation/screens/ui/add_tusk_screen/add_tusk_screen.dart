@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:twittusk/presentation/widgets/littleButton.dart';
 import 'package:twittusk/theme/dimens.dart';
 import 'package:twittusk/theme/theme.dart';
 
 import '../../../../domain/models/user.dart';
 import '../../../widgets/profile_info.dart';
+import '../../logic/current_user_bloc/current_user_bloc.dart';
 
 class AddTuskScreen extends StatelessWidget {
   const AddTuskScreen({Key? key}) : super(key: key);
@@ -17,6 +19,7 @@ class AddTuskScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    BlocProvider.of<CurrentUserBloc>(context).add(GetCurrentUserEvent());
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).customColors.background,
@@ -43,65 +46,85 @@ class AddTuskScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Padding(
-              padding: const EdgeInsets.only(
-                top: Dimens.mediumPadding,
-                left: Dimens.mediumPadding,
-                right: Dimens.mediumPadding,
-              ),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Theme.of(context).customColors.surface,
-                  borderRadius: const BorderRadius.all(
-                    Radius.circular(Dimens.smallRadius),
-                  ),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(Dimens.standardPadding),
-                  child: Row(
-                    children: [
-                      ClipOval(
-                        child: Image.network(
-                          "user.profilePicUri",
-                          width: Dimens.avatarSmall,
-                          height: Dimens.avatarSmall,
-                          fit: BoxFit.cover,
+            BlocBuilder<CurrentUserBloc, CurrentUserState>(
+              builder: (context, state) {
+
+                print("User : ${state.user}");
+
+                switch (state.status) {
+                  case CurrentUserStatus.loading:
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+
+                  case CurrentUserStatus.success:
+                    return Padding(
+                      padding: const EdgeInsets.only(
+                        top: Dimens.mediumPadding,
+                        left: Dimens.mediumPadding,
+                        right: Dimens.mediumPadding,
+                      ),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).customColors.surface,
+                          borderRadius: const BorderRadius.all(
+                            Radius.circular(Dimens.smallRadius),
+                          ),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(Dimens.standardPadding),
+                          child: Row(
+                            children: [
+                              ClipOval(
+                                child: Image.network(
+                                  state.user!.profilePicUri,
+                                  width: Dimens.avatarSmall,
+                                  height: Dimens.avatarSmall,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                              Padding(
+                                padding:
+                                const EdgeInsets.only(left: Dimens.standardPadding),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Column(
+                                      children: [
+                                        Text(
+                                          state.user!.username,
+                                          style: Theme.of(context).textTheme.bodyMedium,
+                                        ),
+                                        const SizedBox(height: Dimens.minPadding),
+                                        Text(
+                                          state.user!.arobase,
+                                          style: TextStyle(
+                                            color: Theme.of(context)
+                                                .customColors
+                                                .secondary,
+                                            fontSize: Dimens.subtitleTextSize,
+                                            fontWeight: FontWeight.w400,
+                                            height: Dimens.subtitleLineHeight,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                      Padding(
-                        padding:
-                            const EdgeInsets.only(left: Dimens.standardPadding),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Column(
-                              children: [
-                                Text(
-                                  "user.username",
-                                  style: Theme.of(context).textTheme.bodyMedium,
-                                ),
-                                const SizedBox(height: Dimens.minPadding),
-                                Text(
-                                  "user.arobase",
-                                  style: TextStyle(
-                                    color: Theme.of(context)
-                                        .customColors
-                                        .secondary,
-                                    fontSize: Dimens.subtitleTextSize,
-                                    fontWeight: FontWeight.w400,
-                                    height: Dimens.subtitleLineHeight,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+                    );
+
+                  default:
+                    return Container();
+
+                }
+
+              },
             ),
             Expanded(
               child: Padding(
