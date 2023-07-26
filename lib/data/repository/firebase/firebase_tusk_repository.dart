@@ -22,8 +22,7 @@ class FirebaseTuskRepository implements TuskRepository {
   }
 
   @override
-  Future<UserSession> signUp(
-      String username, String email, String password) async {
+  Future<UserSession> signUp(String username, String email, String password) async {
     final user = await _dataSource.signUp(username, email, password);
     return user.toUserSession();
   }
@@ -37,17 +36,18 @@ class FirebaseTuskRepository implements TuskRepository {
   Stream<List<Tusk>> getTusks() {
     _dataSource.getTusks().listen((data) async {
       final user = await _dataSource.getCurrentUser();
-      _tuskStreamController
-          .add(data.map((e) => e.toTusk(user?.uid ?? "")).toList());
+      _tuskStreamController.add(data.map((e) => e.toTusk(user?.uid ?? "")).toList());
     });
 
     return _tuskStreamController.stream;
   }
 
   @override
-  Stream<List<Tusk>> getTusksByUser() {
-    // TODO: implement getTusksByUser
-    throw UnimplementedError();
+  Stream<List<Tusk>> getTusksByUser(User user) {
+    _dataSource.getTusksByUser(UserDto.fromUser(user)).listen((data) async {
+      _tuskStreamController.add(data.map((e) => e.toTusk(user.uid)).toList());
+    });
+    return _tuskStreamController.stream;
   }
 
   @override
@@ -85,11 +85,7 @@ class FirebaseTuskRepository implements TuskRepository {
   Future<List<Like>> getMyLikesByTusk(String tuskId) async {
     final user = await _dataSource.getCurrentUser();
     final likes = await _dataSource.getLikesByTusk(tuskId);
-    return likes
-        .map((e) => e.toLike())
-        .toList()
-        .where((e) => e.user.uid == user?.uid)
-        .toList();
+    return likes.map((e) => e.toLike()).toList().where((e) => e.user.uid == user?.uid).toList();
   }
 
   @override

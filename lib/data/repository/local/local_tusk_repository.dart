@@ -50,7 +50,7 @@ class LocalTuskRepository implements TuskRepository {
   }
 
   @override
-  Stream<List<Tusk>> getTusksByUser() {
+  Stream<List<Tusk>> getTusksByUser(User user) {
     // TODO: implement getTusksByUser
     throw UnimplementedError();
   }

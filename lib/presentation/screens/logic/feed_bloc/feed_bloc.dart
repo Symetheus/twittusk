@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/foundation.dart';
 import 'package:twittusk/domain/models/tusk.dart';
+import 'package:twittusk/domain/models/user.dart';
 import 'package:twittusk/domain/repository/tusk_repository.dart';
 
 part 'feed_event.dart';
@@ -12,6 +13,7 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
 
   FeedBloc(this._tuskRepository) : super(FeedState.initial()) {
     on<FeedFetchEvent>(_fetchTusks);
+    on<UserFeedFetchEvent>(_fetchTusksByUser);
     on<FeedLikeEvent>(_likeTusk);
     on<FeedShareEvent>(_shareTusk);
   }
@@ -62,6 +64,25 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
     try {
       final link = await _tuskRepository.generateTuskDynamicLink(event.tuskId);
       emit(state.copyWith(status: FeedStatus.dynamicLinkSuccess, dynamicLink: link));
+    } catch (e) {
+      emit(state.copyWith(
+        errorMessage: e.toString(),
+        status: FeedStatus.error,
+      ));
+    }
+  }
+
+  void _fetchTusksByUser(UserFeedFetchEvent event, Emitter<FeedState> emit) async {
+    emit(state.copyWith(status: FeedStatus.loading));
+    try {
+      await emit.forEach(_tuskRepository.getTusksByUser(event.user), onData: (tusks) {
+        return state.copyWith(tusks: tusks, status: FeedStatus.success);
+      }).catchError((error) {
+        emit(state.copyWith(
+          errorMessage: error.toString(),
+          status: FeedStatus.error,
+        ));
+      });
     } catch (e) {
       emit(state.copyWith(
         errorMessage: e.toString(),
