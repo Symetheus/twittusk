@@ -1,14 +1,21 @@
+
+
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:twittusk/presentation/widgets/buttons/solid_button.dart';
 import 'package:twittusk/presentation/widgets/littleButton.dart';
 import 'package:twittusk/theme/dimens.dart';
 import 'package:twittusk/theme/theme.dart';
 
 import '../../../../domain/models/user.dart';
+import '../../../widgets/image_picker.dart';
 import '../../../widgets/profile_info.dart';
 import '../../logic/current_user_bloc/current_user_bloc.dart';
 
-class AddTuskScreen extends StatelessWidget {
+class AddTuskScreen extends StatefulWidget {
   const AddTuskScreen({Key? key}) : super(key: key);
 
   static const routeName = '/add-tusk';
@@ -17,6 +24,25 @@ class AddTuskScreen extends StatelessWidget {
     Navigator.of(context).pushNamed(routeName);
   }
 
+  @override
+  State<AddTuskScreen> createState() => _AddTuskScreenState();
+}
+
+class _AddTuskScreenState extends State<AddTuskScreen> {
+  final TextEditingController _controller = TextEditingController();
+  User? _user;
+  File? pickedImage;
+
+  Future<void> pickImage() async {
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+    if(image != null){
+      setState(() {
+        pickedImage = File(image.path);
+      });
+    }
+
+  }
   @override
   Widget build(BuildContext context) {
     BlocProvider.of<CurrentUserBloc>(context).add(GetCurrentUserEvent());
@@ -30,11 +56,11 @@ class AddTuskScreen extends StatelessWidget {
           color: Theme.of(context).customColors.onBackground,
           iconSize: Dimens.smallIconSize,
         ),
-        title: const Text("Create Tusk"),
+        title: const Text("Créer un Tusk"),
         actions: [
           LittleButton.primary(
             text: 'Tusker',
-            onPressed: () {},
+            onPressed: () => {},
             style: TextButton.styleFrom(
               maximumSize: const Size(Dimens.littleButtonMinWidth,
                   Dimens.littleButtonMinInteractiveTouch),
@@ -46,9 +72,13 @@ class AddTuskScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            BlocBuilder<CurrentUserBloc, CurrentUserState>(
+            BlocConsumer<CurrentUserBloc, CurrentUserState>(
+              listener: (context, state) {
+                if (state.status == CurrentUserStatus.success) {
+                  _user = state.user!;
+                }
+              },
               builder: (context, state) {
-
                 print("User : ${state.user}");
 
                 switch (state.status) {
@@ -84,19 +114,23 @@ class AddTuskScreen extends StatelessWidget {
                                 ),
                               ),
                               Padding(
-                                padding:
-                                const EdgeInsets.only(left: Dimens.standardPadding),
+                                padding: const EdgeInsets.only(
+                                    left: Dimens.standardPadding),
                                 child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Column(
                                       children: [
                                         Text(
                                           state.user!.username,
-                                          style: Theme.of(context).textTheme.bodyMedium,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyMedium,
                                         ),
-                                        const SizedBox(height: Dimens.minPadding),
+                                        const SizedBox(
+                                            height: Dimens.minPadding),
                                         Text(
                                           state.user!.arobase,
                                           style: TextStyle(
@@ -121,9 +155,7 @@ class AddTuskScreen extends StatelessWidget {
 
                   default:
                     return Container();
-
                 }
-
               },
             ),
             Expanded(
@@ -139,14 +171,61 @@ class AddTuskScreen extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.all(Dimens.standardPadding),
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        IconButton(
-                          onPressed: () => {},
-                          icon: const Icon(Icons.add_photo_alternate_outlined),
-                          color: Theme.of(context).customColors.onBackground,
-                          iconSize: Dimens.smallIconSize,
+                        Column(
+                          children: [
+                            if (pickedImage != null)
+                              Image.file(
+                                pickedImage!,
+                                width: 200,
+                                height: 200,
+                                fit: BoxFit.cover,
+                              )
+                            else
+                              Container(),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  top: Dimens.standardPadding),
+                              child: Container(
+                                child: SolidButton(
+                                  label: "Ajouter une image",
+                                  backgroundColor:
+                                      Theme.of(context).customColors.primary,
+                                  onPressed: () => pickImage(),
+                                  icon: const Icon(
+                                      Icons.add_photo_alternate_outlined),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                        Text('Add Tusk Screen'),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                color: Theme.of(context).customColors.background,
+                                borderRadius: const BorderRadius.all(
+                                  Radius.circular(Dimens.smallRadius),
+                                ),
+                              ),
+                              child: TextField(
+                                controller: _controller,
+                                decoration: InputDecoration(
+                                  labelText: 'Ecrivez votre Tusk',
+                                  border: OutlineInputBorder(),
+                                  hintText: 'Ecrivez votre Tusk',
+                                  fillColor: Theme.of(context)
+                                      .customColors
+                                      .surface,
+                                  filled: true,
+
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ],
                     ),
                   ),
@@ -157,5 +236,21 @@ class AddTuskScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void _onPressed() {
+    final String text = _controller.text;
+    if (text.isNotEmpty) {
+
+      // final Tusk tusk = Tusk(
+      //   user: _user,
+      //   text: text,
+      //   date: DateTime.now(),
+      //   imageUri: pickedImage?.path,
+      // );
+
+      // BlocProvider.of<TusksBloc>(context).add(AddTuskEvent(tusk));
+      // Navigator.pop(context);
+    }
   }
 }

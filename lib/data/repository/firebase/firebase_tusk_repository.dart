@@ -103,4 +103,10 @@ class FirebaseTuskRepository implements TuskRepository {
     final user = await _dataSource.getCurrentUser();
     return user?.toUser();
   }
+
+  @override
+  Future<void> logout() async {
+    await _dataSource.logout();
+  }
+
 }

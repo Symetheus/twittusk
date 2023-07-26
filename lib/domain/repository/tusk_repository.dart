@@ -33,4 +33,6 @@ abstract class TuskRepository {
   Future<Uri> generateTuskDynamicLink(String tuskId);
 
   Future<User?> getCurrentUser();
+
+  Future<void> logout();
 }

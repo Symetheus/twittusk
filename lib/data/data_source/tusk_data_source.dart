@@ -33,4 +33,6 @@ abstract class TuskDataSource {
   Future<void> removeLikeTusk(String likeId, String tuskId);
 
   Future<Uri> generateTuskDynamicLink(String tuskId);
+
+  Future<void> logout();
 }

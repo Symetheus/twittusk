@@ -215,4 +215,9 @@ class FirebaseTuskDataSource implements TuskDataSource {
     });
     return _tuskStreamController.stream;
   }
+
+  @override
+  Future<void> logout() {
+    return _auth.signOut();
+  }
 }
