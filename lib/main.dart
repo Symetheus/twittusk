@@ -1,3 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -5,6 +8,7 @@ import 'package:twittusk/data/repository/firebase/firebase_tusk_repository.dart'
 import 'package:twittusk/data/repository/local/local_tusk_repository.dart';
 import 'package:twittusk/presentation/screens/logic/feed_bloc/feed_bloc.dart';
 import 'package:twittusk/presentation/screens/logic/login_bloc/login_bloc.dart';
+import 'package:twittusk/presentation/screens/ui/add_tusk_screen/add_tusk_screen.dart';
 import 'package:twittusk/presentation/screens/ui/login_screen/login_screen.dart';
 import 'package:twittusk/presentation/screens/ui/nav_screen/nav_screen.dart';
 import 'package:twittusk/theme/theme.dart';
@@ -71,7 +75,7 @@ class MyApp extends StatelessWidget {
           title: 'Twittusk',
           theme: AppTheme.darkThemeData,
           debugShowCheckedModeBanner: false,
-          home: homeScreen,
+          //home: homeScreen,
           // home: ProfileFeedScreen(user: User(uid: 'uid', username: 'Elon Musk', arobase: 'ElonMusk', email: 'email', profilePicUri: 'https://www.thestreet.com/.image/ar_1:1%2Cc_fill%2Ccs_srgb%2Cfl_progressive%2Cq_auto:good%2Cw_1200/MTg4NzYwNTI4NjE5ODQxMDU2/elon-musk_4.jpg', bannerPicUri: 'https://img.phonandroid.com/2021/08/spacex-starship.jpg', bio: 'bio'),),
           routes: {
             NavScreen.routeName: (context) => const NavScreen(),

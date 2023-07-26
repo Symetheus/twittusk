@@ -115,5 +115,10 @@ class LocalTuskRepository implements TuskRepository {
     throw UnimplementedError();
   }
 
+  @override
+  Future<User> getCurrentUser() {
+    // TODO: implement getCurrentUser
+    throw UnimplementedError();
+  }
 
 }

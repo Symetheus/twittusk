@@ -101,4 +101,10 @@ class FirebaseTuskRepository implements TuskRepository {
   Future<Uri> generateTuskDynamicLink(String tuskId) {
     return _dataSource.generateTuskDynamicLink(tuskId);
   }
+
+  @override
+  Future<User?> getCurrentUser() async {
+    final user = await _dataSource.getCurrentUser();
+    return user?.toUser();
+  }
 }

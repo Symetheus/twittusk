@@ -7,7 +7,10 @@ import '../../../../domain/models/user.dart';
 import '../../../widgets/profile_info.dart';
 
 class AddTuskScreen extends StatelessWidget {
-  const AddTuskScreen({required this.user, super.key});
+  const AddTuskScreen({
+    required this.user,
+    super.key,
+  });
 
   final User user;
 
