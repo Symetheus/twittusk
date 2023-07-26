@@ -1,7 +1,4 @@
-
-
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
@@ -9,10 +6,7 @@ import 'package:twittusk/presentation/widgets/buttons/solid_button.dart';
 import 'package:twittusk/presentation/widgets/littleButton.dart';
 import 'package:twittusk/theme/dimens.dart';
 import 'package:twittusk/theme/theme.dart';
-
 import '../../../../domain/models/user.dart';
-import '../../../widgets/image_picker.dart';
-import '../../../widgets/profile_info.dart';
 import '../../logic/current_user_bloc/current_user_bloc.dart';
 
 class AddTuskScreen extends StatefulWidget {

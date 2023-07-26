@@ -1,9 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart' hide User;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:twittusk/data/data_source/firebase/firebase_notification_data_source.dart';
+import 'package:twittusk/data/repository/firebase/firebase_notification_repository.dart';
 import 'package:twittusk/data/repository/firebase/firebase_tusk_repository.dart';
 import 'package:twittusk/presentation/screens/logic/current_user_bloc/current_user_bloc.dart';
 import 'package:twittusk/presentation/screens/logic/feed_bloc/feed_bloc.dart';
@@ -14,7 +17,6 @@ import 'package:twittusk/presentation/screens/ui/nav_screen/nav_screen.dart';
 import 'package:twittusk/presentation/screens/ui/profile_feed_screen/profile_feed_screen.dart';
 import 'package:twittusk/theme/theme.dart';
 import 'data/data_source/firebase/firebase_tusk_data_source.dart';
-import 'domain/repository/tusk_repository.dart';
 import 'package:twittusk/domain/models/user.dart';
 
 void main() async {
@@ -29,14 +31,19 @@ void main() async {
   }
   FirebaseDynamicLinks.instance.onLink.listen(
     (pendingDynamicLinkData) {
-      if (pendingDynamicLinkData != null) {
-        final Uri deepLink = pendingDynamicLinkData.link;
-        print(deepLink.path); // TODO: handle deep link
-        //Navigator.pushNamed(context, deepLink.path);
-      }
+      final Uri deepLink = pendingDynamicLinkData.link;
     },
   );
-
+  final messaging = FirebaseMessaging.instance;
+  final settings = await messaging.requestPermission(
+    alert: true,
+    announcement: false,
+    badge: true,
+    carPlay: false,
+    criticalAlert: false,
+    provisional: false,
+    sound: true,
+  );
   final homeScreen = FirebaseAuth.instance.currentUser == null
       ? const LoginScreen()
       : const NavScreen();
@@ -54,15 +61,21 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider<FeedBloc>(
           create: (context) => FeedBloc(
-            FirebaseTuskRepository(
+            tuskRepository: FirebaseTuskRepository(
               FirebaseTuskDataSource(),
+            ),
+            notificationRepository: FirebaseNotificationRepository(
+              FirebaseNotificationDataSource(),
             ),
           ),
         ),
         BlocProvider<LoginBloc>(
           create: (context) => LoginBloc(
-            FirebaseTuskRepository(
+            repository: FirebaseTuskRepository(
               FirebaseTuskDataSource(),
+            ),
+            notificationRepository: FirebaseNotificationRepository(
+              FirebaseNotificationDataSource(),
             ),
           ),
         ),
