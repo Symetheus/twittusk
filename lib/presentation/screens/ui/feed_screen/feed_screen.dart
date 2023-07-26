@@ -8,7 +8,9 @@ import 'package:twittusk/presentation/widgets/tusk_item.dart';
 import 'package:twittusk/theme/dimens.dart';
 import 'package:twittusk/theme/theme.dart';
 
-class FeedScreen extends StatelessWidget {
+import '../add_tusk_screen/add_tusk_screen.dart';
+
+class FeedScreen extends StatefulWidget {
   const FeedScreen({Key? key}) : super(key: key);
 
   @override
@@ -78,11 +80,15 @@ class _FeedScreenState extends State<FeedScreen> {
       tuskId: uid,
       isLiked: isLiked,
     ));
+    BlocProvider.of<FeedBloc>(context).add(FeedFetchEvent());
+
   }
 
   void _onShare(BuildContext context, String uid) {
     BlocProvider.of<FeedBloc>(context).add(FeedShareEvent(
       tuskId: uid,
     ));
+    BlocProvider.of<FeedBloc>(context).add(FeedFetchEvent());
+
   }
 }

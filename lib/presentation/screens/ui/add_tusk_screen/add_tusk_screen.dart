@@ -62,7 +62,7 @@ class AddTuskScreen extends StatelessWidget {
                     children: [
                       ClipOval(
                         child: Image.network(
-                          user.profilePicUri,
+                          "user.profilePicUri",
                           width: Dimens.avatarSmall,
                           height: Dimens.avatarSmall,
                           fit: BoxFit.cover,
@@ -78,12 +78,12 @@ class AddTuskScreen extends StatelessWidget {
                             Column(
                               children: [
                                 Text(
-                                  user.username,
+                                  "user.username",
                                   style: Theme.of(context).textTheme.bodyMedium,
                                 ),
                                 const SizedBox(height: Dimens.minPadding),
                                 Text(
-                                  user.arobase,
+                                  "user.arobase",
                                   style: TextStyle(
                                     color: Theme.of(context)
                                         .customColors
