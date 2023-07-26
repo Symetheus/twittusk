@@ -20,4 +20,9 @@ class FirebaseNotificationRepository implements NotificationRepository {
   Future<void> subscribeToTopic(String topic) async {
     await _dataSource.subscribeToTopic(topic);
   }
+
+  @override
+  Future<void> unsubscribeFromTopic(String topic) async {
+    await _dataSource.unsubscribeFromTopic(topic);
+  }
 }

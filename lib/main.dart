@@ -81,8 +81,11 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider<CurrentUserBloc>(
           create: (context) => CurrentUserBloc(
-            FirebaseTuskRepository(
+            tuskRepository: FirebaseTuskRepository(
               FirebaseTuskDataSource(),
+            ),
+            notificationRepository: FirebaseNotificationRepository(
+              FirebaseNotificationDataSource(),
             ),
           ),
         ),

@@ -28,4 +28,9 @@ class FirebaseNotificationDataSource implements NotificationDataSource {
   Future<void> subscribeToTopic(String topic) async {
     _messaging.subscribeToTopic(topic);
   }
+
+  @override
+  Future<void> unsubscribeFromTopic(String topic) async {
+    _messaging.unsubscribeFromTopic(topic);
+  }
 }

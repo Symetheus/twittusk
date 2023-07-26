@@ -74,7 +74,16 @@ class ProfileScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                )
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(Dimens.doublePadding),
+                  child: IconButton(
+                    onPressed: () => _onLogout(context),
+                    icon: const Icon(Icons.logout),
+                    color: Theme.of(context).customColors.onBackground,
+                    iconSize: Dimens.smallIconSize,
+                  ),
+                ),
               ],
             );
 
