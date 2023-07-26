@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:twittusk/data/repository/firebase/firebase_tusk_repository.dart';
-import 'package:twittusk/data/repository/local/local_tusk_repository.dart';
 import 'package:twittusk/presentation/screens/logic/feed_bloc/feed_bloc.dart';
 import 'package:twittusk/presentation/screens/logic/login_bloc/login_bloc.dart';
 import 'package:twittusk/presentation/screens/ui/login_screen/login_screen.dart';
@@ -15,7 +14,6 @@ import 'package:twittusk/theme/theme.dart';
 import 'data/data_source/firebase/firebase_tusk_data_source.dart';
 import 'domain/repository/tusk_repository.dart';
 import 'package:twittusk/domain/models/user.dart';
-
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,7 +25,8 @@ void main() async {
     print(deepLink.path); // TODO: handle deep link
     //Navigator.pushNamed(context, deepLink.path);
   }
-  FirebaseDynamicLinks.instance.onLink.listen( (pendingDynamicLinkData) {
+  FirebaseDynamicLinks.instance.onLink.listen(
+    (pendingDynamicLinkData) {
       if (pendingDynamicLinkData != null) {
         final Uri deepLink = pendingDynamicLinkData.link;
         print(deepLink.path); // TODO: handle deep link
@@ -35,7 +34,6 @@ void main() async {
       }
     },
   );
-
 
   final homeScreen = FirebaseAuth.instance.currentUser == null
       ? const LoginScreen()
@@ -50,53 +48,46 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiRepositoryProvider(
+    return MultiBlocProvider(
       providers: [
-        RepositoryProvider<TuskRepository>(
-          create: (context) => LocalTuskRepository(),
+        BlocProvider<FeedBloc>(
+          create: (context) => FeedBloc(
+            FirebaseTuskRepository(
+              FirebaseTuskDataSource(),
+            ),
+          ),
+        ),
+        BlocProvider<LoginBloc>(
+          create: (context) => LoginBloc(
+            FirebaseTuskRepository(
+              FirebaseTuskDataSource(),
+            ),
+          ),
         ),
       ],
-      child: MultiBlocProvider(
-        providers: [
-          BlocProvider<FeedBloc>(
-            create: (context) => FeedBloc(
-              FirebaseTuskRepository(
-                FirebaseTuskDataSource(),
-              ),
-            ),
-          ),
-          BlocProvider<LoginBloc>(
-            create: (context) => LoginBloc(
-              FirebaseTuskRepository(
-                FirebaseTuskDataSource(),
-              ),
-            ),
-          ),
-        ],
-        child: MaterialApp(
-          title: 'Twittusk',
-          theme: AppTheme.darkThemeData,
-          debugShowCheckedModeBanner: false,
-          // home: ProfileFeedScreen(user: User(uid: 'uid', username: 'Elon Musk', arobase: 'ElonMusk', email: 'email', profilePicUri: 'https://www.thestreet.com/.image/ar_1:1%2Cc_fill%2Ccs_srgb%2Cfl_progressive%2Cq_auto:good%2Cw_1200/MTg4NzYwNTI4NjE5ODQxMDU2/elon-musk_4.jpg', bannerPicUri: 'https://img.phonandroid.com/2021/08/spacex-starship.jpg', bio: 'bio'),),
-          routes: {
-            '/' : (context) => homeScreen,
-            NavScreen.routeName: (context) => const NavScreen(),
-            LoginScreen.routeName: (context) => const LoginScreen(),
-            // FeedScreen.routeName: (context) => const FeedScreen(),
-          },
-          onGenerateRoute: (settings) {
-            Widget content = const SizedBox.shrink();
+      child: MaterialApp(
+        title: 'Twittusk',
+        theme: AppTheme.darkThemeData,
+        debugShowCheckedModeBanner: false,
+        // home: ProfileFeedScreen(user: User(uid: 'uid', username: 'Elon Musk', arobase: 'ElonMusk', email: 'email', profilePicUri: 'https://www.thestreet.com/.image/ar_1:1%2Cc_fill%2Ccs_srgb%2Cfl_progressive%2Cq_auto:good%2Cw_1200/MTg4NzYwNTI4NjE5ODQxMDU2/elon-musk_4.jpg', bannerPicUri: 'https://img.phonandroid.com/2021/08/spacex-starship.jpg', bio: 'bio'),),
+        routes: {
+          '/': (context) => homeScreen,
+          NavScreen.routeName: (context) => const NavScreen(),
+          LoginScreen.routeName: (context) => const LoginScreen(),
+          // FeedScreen.routeName: (context) => const FeedScreen(),
+        },
+        onGenerateRoute: (settings) {
+          Widget content = const SizedBox.shrink();
 
-            switch (settings.name) {
-              case ProfileFeedScreen.routeName:
-                final arguments = settings.arguments;
-                if (arguments != null && arguments is User) {
-                  content = ProfileFeedScreen(user: arguments);
-                }
-            }
-            return MaterialPageRoute(builder: (context) => content);
+          switch (settings.name) {
+            case ProfileFeedScreen.routeName:
+              final arguments = settings.arguments;
+              if (arguments != null && arguments is User) {
+                content = ProfileFeedScreen(user: arguments);
+              }
           }
-        ),
+          return MaterialPageRoute(builder: (context) => content);
+        },
       ),
     );
   }

@@ -8,23 +8,22 @@ import 'package:twittusk/presentation/widgets/tusk_item.dart';
 import 'package:twittusk/theme/dimens.dart';
 import 'package:twittusk/theme/theme.dart';
 
-class FeedScreen extends StatelessWidget {
+class FeedScreen extends StatefulWidget {
   const FeedScreen({Key? key}) : super(key: key);
 
+  @override
+  State<FeedScreen> createState() => _FeedScreenState();
+
+}
+
+class _FeedScreenState extends State<FeedScreen> {
   @override
   Widget build(BuildContext context) {
     BlocProvider.of<FeedBloc>(context).add(FeedFetchEvent());
     return Scaffold(
       body: BlocConsumer<FeedBloc, FeedState>(
         listener: (context, state) {
-          if (state.status == FeedStatus.error) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.errorMessage),
-                backgroundColor: Theme.of(context).customColors.error,
-              ),
-            );
-          } else if (state.status == FeedStatus.dynamicLinkSuccess) {
+          if (state.status == FeedStatus.dynamicLinkSuccess) {
             Share.share(state.dynamicLink!.toString());
           }
         },
