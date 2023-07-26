@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:twittusk/data/repository/firebase/firebase_tusk_repository.dart';
-import 'package:twittusk/data/repository/local/local_tusk_repository.dart';
 import 'package:twittusk/presentation/screens/logic/current_user_bloc/current_user_bloc.dart';
 import 'package:twittusk/presentation/screens/logic/feed_bloc/feed_bloc.dart';
 import 'package:twittusk/presentation/screens/logic/login_bloc/login_bloc.dart';
@@ -67,6 +66,13 @@ class MyApp extends StatelessWidget {
             ),
           ),
         ),
+        BlocProvider<CurrentUserBloc>(
+          create: (context) => CurrentUserBloc(
+            FirebaseTuskRepository(
+              FirebaseTuskDataSource(),
+            ),
+          ),
+        ),
       ],
       child: MaterialApp(
         title: 'Twittusk',
@@ -77,6 +83,7 @@ class MyApp extends StatelessWidget {
           '/': (context) => homeScreen,
           NavScreen.routeName: (context) => const NavScreen(),
           LoginScreen.routeName: (context) => const LoginScreen(),
+          AddTuskScreen.routeName: (context) => const AddTuskScreen(),
           // FeedScreen.routeName: (context) => const FeedScreen(),
         },
         onGenerateRoute: (settings) {
