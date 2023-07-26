@@ -4,6 +4,7 @@ import '../models/like.dart';
 import '../models/user.dart';
 
 abstract class TuskRepository {
+  // USER
   Future<UserSession> signIn(String email, String password);
 
   Future<UserSession> signInWithGoogle();
@@ -18,9 +19,10 @@ abstract class TuskRepository {
 
   Future<void> resetPassword(String email);
 
+  // TUSKS
   Stream<List<Tusk>> getTusks();
 
-  Stream<List<Tusk>> getTusksByUser();
+  Stream<List<Tusk>> getTusksByUser(User user);
 
   Future<List<Like>> getMyLikesByTusk(String tuskId);
 

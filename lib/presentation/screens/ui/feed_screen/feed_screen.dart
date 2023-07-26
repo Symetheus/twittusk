@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:share/share.dart';
 import 'package:twittusk/presentation/screens/logic/feed_bloc/feed_bloc.dart';
+import 'package:twittusk/presentation/screens/ui/profile_feed_screen/profile_feed_screen.dart';
 import 'package:twittusk/presentation/widgets/tusk_item.dart';
 import 'package:twittusk/theme/dimens.dart';
 import 'package:twittusk/theme/theme.dart';
@@ -39,13 +40,15 @@ class FeedScreen extends StatelessWidget {
                 itemCount: state.tusks.length,
                 padding: const EdgeInsets.all(Dimens.minPadding),
                 itemBuilder: (context, index) {
+                  final tusk = state.tusks[index];
                   return Padding(
                     padding: const EdgeInsets.only(top: Dimens.minPadding),
                     child: TuskItem(
-                        tusk: state.tusks[index],
-                        onTapLike: () => _onLikeOrDislike(context, state.tusks[index].id, true),
-                        onTapDislike: () => _onLikeOrDislike(context, state.tusks[index].id, false),
-                        onTapShare: () => _onShare(context, state.tusks[index].id),
+                        tusk: tusk,
+                        onTapProfile: () => ProfileFeedScreen.navigate(context, tusk.profile),
+                        onTapLike: () => _onLikeOrDislike(context, tusk.id, true),
+                        onTapDislike: () => _onLikeOrDislike(context, tusk.id, false),
+                        onTapShare: () => _onShare(context, tusk.id),
                     ),
                   );
                 },

@@ -5,6 +5,12 @@ abstract class FeedEvent {}
 
 class FeedFetchEvent extends FeedEvent {}
 
+class UserFeedFetchEvent extends FeedEvent {
+  UserFeedFetchEvent(this.user);
+
+  final User user;
+}
+
 class FeedLikeEvent extends FeedEvent {
   final String tuskId;
   final bool isLiked;

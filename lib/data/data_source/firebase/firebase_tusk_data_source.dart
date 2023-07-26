@@ -35,7 +35,7 @@ class FirebaseTuskDataSource implements TuskDataSource {
       accessToken: googleAuth?.accessToken,
       idToken: googleAuth?.idToken,
     );
-    final credentials =  await _auth.signInWithCredential(credential);
+    final credentials = await _auth.signInWithCredential(credential);
     return UserSessionDto.fromUserCredential(credentials);
   }
 
@@ -47,8 +47,7 @@ class FirebaseTuskDataSource implements TuskDataSource {
       redirectURI: "twittusk://",
     );
     final authResult = await twitterLogin.login();
-    final AuthCredential twitterAuthCredential =
-    TwitterAuthProvider.credential(
+    final AuthCredential twitterAuthCredential = TwitterAuthProvider.credential(
       accessToken: authResult.authToken!,
       secret: authResult.authTokenSecret!,
     );
@@ -72,8 +71,7 @@ class FirebaseTuskDataSource implements TuskDataSource {
         uid: userCredential.user!.uid,
         username: username,
         arobase: userCredential.user!.email!.split('@')[0],
-        email: email
-    );
+        email: email);
     _firestore.collection("users").add(user.toJson());
     return UserSessionDto.fromUserCredential(userCredential);
   }
@@ -81,7 +79,7 @@ class FirebaseTuskDataSource implements TuskDataSource {
   @override
   Future<UserDto?> getUserById(String uid) async {
     final user = await _firestore.collection("users").doc(uid).get();
-    if(!user.exists) {
+    if (!user.exists) {
       return null;
     }
     return UserDto.fromJson(user.data()!, user.id);
@@ -105,7 +103,7 @@ class FirebaseTuskDataSource implements TuskDataSource {
         tusk.user = await _getUserFromDocumentRef(doc.data()["user"]);
         doc.reference.collection("comments").snapshots().listen((event) async {
           tusk.comments.clear();
-          for(var i = 0; i < event.docs.length; i++) {
+          for (var i = 0; i < event.docs.length; i++) {
             final comment = event.docs[i];
             final commentDto = TuskDto.fromJson(comment.data(), comment.id);
             commentDto.user = await _getUserFromDocumentRef(comment.data()["user"]);
@@ -115,7 +113,7 @@ class FirebaseTuskDataSource implements TuskDataSource {
         });
         doc.reference.collection("likes").snapshots().listen((event) async {
           tusk.likes.clear();
-          for(var i = 0; i < event.docs.length; i++) {
+          for (var i = 0; i < event.docs.length; i++) {
             final like = event.docs[i];
             final likeDto = LikeDto.fromJson(like.data(), like.id);
             likeDto.user = await _getUserFromDocumentRef(like.data()["user"]);
@@ -139,11 +137,11 @@ class FirebaseTuskDataSource implements TuskDataSource {
   @override
   Future<UserDto?> getCurrentUser() async {
     final user = _auth.currentUser;
-    if(user == null) {
+    if (user == null) {
       return null;
     }
     final userDoc = await _firestore.collection("users").doc(user.uid).get();
-    if(!userDoc.exists) {
+    if (!userDoc.exists) {
       return null;
     }
     return UserDto.fromJson(userDoc.data()!, userDoc.id);
@@ -184,7 +182,8 @@ class FirebaseTuskDataSource implements TuskDataSource {
       socialMetaTagParameters: SocialMetaTagParameters(
         title: 'Twittusk',
         description: 'Twittusk',
-        imageUrl: Uri.parse('https://cap.img.pmdstatic.net/fit/https.3A.2F.2Fi.2Epmdstatic.2Enet.2Fcap.2F2023.2F05.2F19.2F3716e4a3-1381-44ab-9d21-b350ebba33ea.2Ejpeg/1200x630/background-color/ffffff/quality/70/elon-musk-decouvrez-les-secrets-intrigants-de-lhomme-le-plus-puissant-de-la-planete-1468904.jpg'),
+        imageUrl: Uri.parse(
+            'https://cap.img.pmdstatic.net/fit/https.3A.2F.2Fi.2Epmdstatic.2Enet.2Fcap.2F2023.2F05.2F19.2F3716e4a3-1381-44ab-9d21-b350ebba33ea.2Ejpeg/1200x630/background-color/ffffff/quality/70/elon-musk-decouvrez-les-secrets-intrigants-de-lhomme-le-plus-puissant-de-la-planete-1468904.jpg'),
       ),
       androidParameters: AndroidParameters(
         packageName: 'com.yummy.twittusk',
@@ -196,10 +195,23 @@ class FirebaseTuskDataSource implements TuskDataSource {
       ),
     );
 
-    final ShortDynamicLink shortLink = await _dynamicLinks.buildShortLink(
-        parameters
-    );
+    final ShortDynamicLink shortLink = await _dynamicLinks.buildShortLink(parameters);
     return shortLink.shortUrl;
   }
 
+  @override
+  Stream<List<TuskDto>> getTusksByUser(UserDto user) {
+    _firestore
+        .collection('tusks')
+        .where("user", isEqualTo: _firestore.collection("users").doc(user.uid))
+        .orderBy("publishedAt", descending: true)
+        .snapshots()
+        .listen((snapshot) {
+      List<TuskDto> tusks = snapshot.docs.map((doc) {
+        return TuskDto.fromJson(doc.data(), user.uid);
+      }).toList();
+      _tuskStreamController.add(tusks);
+    });
+    return _tuskStreamController.stream;
+  }
 }

@@ -14,15 +14,24 @@ class ProfileFeedScreen extends StatelessWidget {
 
   final User user;
 
+  static const routeName = '/profile-feed';
+
+  static void navigate(BuildContext context, User user) {
+    Navigator.pushNamed(context, routeName, arguments: user);
+  }
+
   @override
   Widget build(BuildContext context) {
-    BlocProvider.of<FeedBloc>(context).add(FeedFetchEvent());
+    BlocProvider.of<FeedBloc>(context).add(UserFeedFetchEvent(user));
     return Scaffold(
       body: Column(
         children: [
           ProfileInfo(user: user),
           const SizedBox(height: Dimens.halfPadding),
-          const Divider(thickness: Dimens.dividerThickness, height: 1,),
+          const Divider(
+            thickness: Dimens.dividerThickness,
+            height: 1,
+          ),
           BlocBuilder<FeedBloc, FeedState>(
             builder: (context, state) {
               switch (state.status) {
@@ -34,8 +43,8 @@ class ProfileFeedScreen extends StatelessWidget {
                 default:
                   return Expanded(
                     child: ListView.builder(
-                      itemCount: state.tusks.length,
                       padding: const EdgeInsets.all(Dimens.minPadding),
+                      itemCount: state.tusks.length,
                       itemBuilder: (context, index) {
                         return Padding(
                           padding: const EdgeInsets.only(top: Dimens.minPadding),
