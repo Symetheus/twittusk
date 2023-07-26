@@ -1,4 +1,5 @@
 import 'package:twittusk/data/dto/like_dto.dart';
+import 'package:twittusk/data/dto/tusk_add_dto.dart';
 import 'package:twittusk/data/dto/tusk_dto.dart';
 import 'package:twittusk/data/dto/user_session_dto.dart';
 import '../dto/user_dto.dart';
@@ -33,4 +34,8 @@ abstract class TuskDataSource {
   Future<void> removeLikeTusk(String likeId, String tuskId);
 
   Future<Uri> generateTuskDynamicLink(String tuskId);
+
+  Future<void> addCommentToTusk(String tuskId, String comment, UserDto user);
+
+  Stream<List<TuskDto>> getCommentsForTusk(String tuskId);
 }

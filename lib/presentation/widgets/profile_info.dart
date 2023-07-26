@@ -115,7 +115,7 @@ class ProfileInfo extends StatelessWidget {
                 ActionIcon(
                   color: Theme.of(context).customColors.textSecondary,
                   iconAsset: "lib/assets/icons/account.svg",
-                  label: '0 Folluskink', // TODO: replace with real data
+                  label: '0 Follusking', // TODO: replace with real data
                   onTap: () {},
                 ),
               ],

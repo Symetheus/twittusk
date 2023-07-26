@@ -103,4 +103,20 @@ class FirebaseTuskRepository implements TuskRepository {
     final user = await _dataSource.getCurrentUser();
     return user?.toUser();
   }
+
+  @override
+  Future<void> addCommentToTusk(String tuskId, String comment, User user) {
+    return _dataSource.addCommentToTusk(tuskId, comment, UserDto.fromUser(user));
+  }
+
+  @override
+  Stream<List<Tusk>> getCommentsForTusk(String tuskId) {
+    _dataSource.getCommentsForTusk(tuskId).listen((data) async {
+      final user = await _dataSource.getCurrentUser();
+      _tuskStreamController.add(data.map((e) => e.toTusk(user?.uid ?? "")).toList());
+    });
+    return _tuskStreamController.stream;
+  }
+
+
 }

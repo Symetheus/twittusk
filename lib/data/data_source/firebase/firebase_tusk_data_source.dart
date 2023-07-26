@@ -8,6 +8,7 @@ import 'package:twitter_login/twitter_login.dart';
 import 'package:twittusk/data/data_source/tusk_data_source.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:twittusk/data/dto/like_dto.dart';
+import 'package:twittusk/data/dto/tusk_add_dto.dart';
 import 'package:twittusk/data/dto/tusk_dto.dart';
 import 'package:twittusk/data/dto/user_dto.dart';
 import '../../dto/user_session_dto.dart';
@@ -72,7 +73,7 @@ class FirebaseTuskDataSource implements TuskDataSource {
         username: username,
         arobase: userCredential.user!.email!.split('@')[0],
         email: email);
-    _firestore.collection("users").add(user.toJson());
+    await _firestore.collection("users").doc(user.uid).set(user.toJson());
     return UserSessionDto.fromUserCredential(userCredential);
   }
 
@@ -139,10 +140,10 @@ class FirebaseTuskDataSource implements TuskDataSource {
       return null;
     }
     final userDoc = await _firestore.collection("users").doc(user.uid).get();
-    if (!userDoc.exists) {
+    if (userDoc.exists == false) {
       return null;
     }
-    return UserDto.fromJson(userDoc.data()!, userDoc.id);
+    return UserDto.fromJson(userDoc.data() as Map<String, dynamic>, userDoc.id);
   }
 
   @override
@@ -213,6 +214,33 @@ class FirebaseTuskDataSource implements TuskDataSource {
       }).toList();
       _tuskStreamController.add(tusks);
     });
+    return _tuskStreamController.stream;
+  }
+
+  @override
+  Future<void> addCommentToTusk(String tuskId, String comment, UserDto user) {
+    final tuskRef = _firestore.collection('tusks').doc(tuskId);
+    final json = TuskAddDto(
+      description: comment,
+      publishedAt: DateTime.now(),
+      user: _firestore.collection("users").doc(user.uid),
+    ).toJson();
+    return tuskRef.collection("comments").add(json);
+  }
+
+  @override
+  Stream<List<TuskDto>> getCommentsForTusk(String tuskId) {
+    final tuskRef = _firestore.collection('tusks').doc(tuskId);
+    tuskRef.collection("comments").snapshots().listen((snapshot) async {
+      final List<TuskDto> tuskList = [];
+      for (var doc in snapshot.docs) {
+        final tusk = TuskDto.fromJson(doc.data(), doc.id);
+        tusk.user = await _getUserFromDocumentRef(doc.data()["user"]);
+        tuskList.add(tusk);
+      }
+      _tuskStreamController.add(tuskList);
+    });
+
     return _tuskStreamController.stream;
   }
 }

@@ -6,15 +6,18 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:twittusk/data/repository/firebase/firebase_tusk_repository.dart';
 import 'package:twittusk/presentation/screens/logic/current_user_bloc/current_user_bloc.dart';
+import 'package:twittusk/domain/models/tusk.dart';
 import 'package:twittusk/presentation/screens/logic/feed_bloc/feed_bloc.dart';
 import 'package:twittusk/presentation/screens/logic/login_bloc/login_bloc.dart';
 import 'package:twittusk/presentation/screens/ui/add_tusk_screen/add_tusk_screen.dart';
+import 'package:twittusk/presentation/screens/logic/profile_feed_bloc/profile_feed_bloc.dart';
+import 'package:twittusk/presentation/screens/logic/tusk_bloc/tusk_bloc.dart';
 import 'package:twittusk/presentation/screens/ui/login_screen/login_screen.dart';
 import 'package:twittusk/presentation/screens/ui/nav_screen/nav_screen.dart';
 import 'package:twittusk/presentation/screens/ui/profile_feed_screen/profile_feed_screen.dart';
+import 'package:twittusk/presentation/screens/ui/tusk_screen/tusk_screen.dart';
 import 'package:twittusk/theme/theme.dart';
 import 'data/data_source/firebase/firebase_tusk_data_source.dart';
-import 'domain/repository/tusk_repository.dart';
 import 'package:twittusk/domain/models/user.dart';
 
 void main() async {
@@ -59,6 +62,20 @@ class MyApp extends StatelessWidget {
             ),
           ),
         ),
+        BlocProvider<ProfileFeedBloc>(
+          create: (context) => ProfileFeedBloc(
+            FirebaseTuskRepository(
+              FirebaseTuskDataSource(),
+            ),
+          ),
+        ),
+        BlocProvider<TuskBloc>(
+          create: (context) => TuskBloc(
+            FirebaseTuskRepository(
+              FirebaseTuskDataSource(),
+            ),
+          ),
+        ),
         BlocProvider<LoginBloc>(
           create: (context) => LoginBloc(
             FirebaseTuskRepository(
@@ -94,6 +111,11 @@ class MyApp extends StatelessWidget {
               final arguments = settings.arguments;
               if (arguments != null && arguments is User) {
                 content = ProfileFeedScreen(user: arguments);
+              }
+            case TuskScreen.routeName:
+              final arguments = settings.arguments;
+              if (arguments != null && arguments is Tusk) {
+                content = TuskScreen(tusk: arguments);
               }
           }
           return MaterialPageRoute(builder: (context) => content);

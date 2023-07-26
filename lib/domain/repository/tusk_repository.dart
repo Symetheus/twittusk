@@ -33,4 +33,9 @@ abstract class TuskRepository {
   Future<Uri> generateTuskDynamicLink(String tuskId);
 
   Future<User?> getCurrentUser();
+
+  Future<void> addCommentToTusk(String tuskId, String comment, User user);
+
+  Stream<List<Tusk>> getCommentsForTusk(String tweetId);
+
 }

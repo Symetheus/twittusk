@@ -28,3 +28,11 @@ class FeedShareEvent extends FeedEvent {
     required this.tuskId,
   });
 }
+
+class FeedCommentEvent extends FeedEvent {
+  FeedCommentEvent({
+    required this.tusk,
+  });
+
+  final Tusk tusk;
+}
