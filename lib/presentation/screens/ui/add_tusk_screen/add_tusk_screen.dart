@@ -7,12 +7,13 @@ import '../../../../domain/models/user.dart';
 import '../../../widgets/profile_info.dart';
 
 class AddTuskScreen extends StatelessWidget {
-  const AddTuskScreen({
-    required this.user,
-    super.key,
-  });
+  const AddTuskScreen({Key? key}) : super(key: key);
 
-  final User user;
+  static const routeName = '/add-tusk';
+
+  static void navigateTo(BuildContext context) {
+    Navigator.of(context).pushNamed(routeName);
+  }
 
   @override
   Widget build(BuildContext context) {

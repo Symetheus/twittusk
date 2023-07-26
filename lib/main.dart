@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:twittusk/data/repository/firebase/firebase_tusk_repository.dart';
 import 'package:twittusk/data/repository/local/local_tusk_repository.dart';
+import 'package:twittusk/presentation/screens/logic/current_user_bloc/current_user_bloc.dart';
 import 'package:twittusk/presentation/screens/logic/feed_bloc/feed_bloc.dart';
 import 'package:twittusk/presentation/screens/logic/login_bloc/login_bloc.dart';
 import 'package:twittusk/presentation/screens/ui/add_tusk_screen/add_tusk_screen.dart';
@@ -17,7 +18,6 @@ import 'data/data_source/firebase/firebase_tusk_data_source.dart';
 import 'domain/repository/tusk_repository.dart';
 import 'package:twittusk/domain/models/user.dart';
 
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: "lib/.env");
@@ -28,7 +28,8 @@ void main() async {
     print(deepLink.path); // TODO: handle deep link
     //Navigator.pushNamed(context, deepLink.path);
   }
-  FirebaseDynamicLinks.instance.onLink.listen( (pendingDynamicLinkData) {
+  FirebaseDynamicLinks.instance.onLink.listen(
+    (pendingDynamicLinkData) {
       if (pendingDynamicLinkData != null) {
         final Uri deepLink = pendingDynamicLinkData.link;
         print(deepLink.path); // TODO: handle deep link
@@ -36,7 +37,6 @@ void main() async {
       }
     },
   );
-
 
   final homeScreen = FirebaseAuth.instance.currentUser == null
       ? const LoginScreen()
@@ -73,99 +73,43 @@ class MyApp extends StatelessWidget {
               ),
             ),
           ),
+          BlocProvider<CurrentUserBloc>(
+            create: (context) => CurrentUserBloc(
+              FirebaseTuskRepository(
+                FirebaseTuskDataSource(),
+              ),
+            ),
+          ),
         ],
         child: MaterialApp(
-          title: 'Twittusk',
-          theme: AppTheme.darkThemeData,
-          debugShowCheckedModeBanner: false,
-          //home: homeScreen,
-          // home: ProfileFeedScreen(user: User(uid: 'uid', username: 'Elon Musk', arobase: 'ElonMusk', email: 'email', profilePicUri: 'https://www.thestreet.com/.image/ar_1:1%2Cc_fill%2Ccs_srgb%2Cfl_progressive%2Cq_auto:good%2Cw_1200/MTg4NzYwNTI4NjE5ODQxMDU2/elon-musk_4.jpg', bannerPicUri: 'https://img.phonandroid.com/2021/08/spacex-starship.jpg', bio: 'bio'),),
-          routes: {
-            '/' : (context) => homeScreen,
-            NavScreen.routeName: (context) => const NavScreen(),
-            LoginScreen.routeName: (context) => const LoginScreen(),
-            // FeedScreen.routeName: (context) => const FeedScreen(),
-          },
-          onGenerateRoute: (settings) {
-            Widget content = const SizedBox.shrink();
+            title: 'Twittusk',
+            theme: AppTheme.darkThemeData,
+            debugShowCheckedModeBanner: false,
+            routes: {
+              '/': (context) => homeScreen,
+              NavScreen.routeName: (context) => const NavScreen(),
+              LoginScreen.routeName: (context) => const LoginScreen(),
+              AddTuskScreen.routeName: (context) => const AddTuskScreen(),
+              // FeedScreen.routeName: (context) => const FeedScreen(),
+            },
+            onGenerateRoute: (settings) {
+              Widget content = const SizedBox.shrink();
 
-            switch (settings.name) {
-              case ProfileFeedScreen.routeName:
-                final arguments = settings.arguments;
-                if (arguments != null && arguments is User) {
-                  content = ProfileFeedScreen(user: arguments);
-                }
+              switch (settings.name) {
+                case ProfileFeedScreen.routeName:
+                  final arguments = settings.arguments;
+                  if (arguments != null && arguments is User) {
+                    content = ProfileFeedScreen(user: arguments);
+                  }
+              }
+              return MaterialPageRoute(builder: (context) => content);
             }
-            return MaterialPageRoute(builder: (context) => content);
-          }
-          /*theme: ThemeData(
+            /*theme: ThemeData(
             colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
             useMaterial3: true,
           ),*/
-          // home: const FeedScreen(),
-          // home: NavScreen(),
-          //home: ProfileFeedScreen(user: User(uid: 'uid', username: 'Elon Musk', arobase: 'ElonMusk', email: 'email', profilePicUri: 'https://www.thestreet.com/.image/ar_1:1%2Cc_fill%2Ccs_srgb%2Cfl_progressive%2Cq_auto:good%2Cw_1200/MTg4NzYwNTI4NjE5ODQxMDU2/elon-musk_4.jpg', bannerPicUri: 'https://img.phonandroid.com/2021/08/spacex-starship.jpg', bio: 'bio'),),
-          home: AddTuskScreen(
-            user: User(
-                uid: 'uid',
-                username: 'Elon Musk',
-                arobase: '@ElonMusk',
-                email: 'email',
-                profilePicUri:
-                    'https://www.thestreet.com/.image/ar_1:1%2Cc_fill%2Ccs_srgb%2Cfl_progressive%2Cq_auto:good%2Cw_1200/MTg4NzYwNTI4NjE5ODQxMDU2/elon-musk_4.jpg',
-                bannerPicUri:
-                    'https://img.phonandroid.com/2021/08/spacex-starship.jpg',
-                bio: 'bio'),
-          ),
-        ),
-      ),
-    );
-  }
-}
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
       ),
     );
   }

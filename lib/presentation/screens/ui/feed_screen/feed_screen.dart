@@ -8,6 +8,9 @@ import 'package:twittusk/presentation/widgets/tusk_item.dart';
 import 'package:twittusk/theme/dimens.dart';
 import 'package:twittusk/theme/theme.dart';
 
+import '../../../../domain/models/user.dart';
+import '../add_tusk_screen/add_tusk_screen.dart';
+
 class FeedScreen extends StatelessWidget {
   const FeedScreen({Key? key}) : super(key: key);
 
@@ -59,7 +62,7 @@ class FeedScreen extends StatelessWidget {
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(bottom: 60),
         child: FloatingActionButton(
-          onPressed: _onPressed,
+          onPressed: () => _onAddTuskScreen(context),
           backgroundColor: Theme.of(context).customColors.primary,
           child: SvgPicture.asset(
             'lib/assets/icons/tusk-solid.svg',
@@ -70,7 +73,8 @@ class FeedScreen extends StatelessWidget {
     );
   }
 
-  void _onPressed() {
+  void _onAddTuskScreen(BuildContext context) {
+    AddTuskScreen.navigateTo(context);
   }
 
   void _onLikeOrDislike(BuildContext context, String uid, bool isLiked) {
