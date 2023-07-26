@@ -12,6 +12,8 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
 
   FeedBloc(this._tuskRepository) : super(FeedState.initial()) {
     on<FeedFetchEvent>(_fetchTusks);
+    on<FeedLikeEvent>(_likeTusk);
+    on<FeedShareEvent>(_shareTusk);
   }
 
   void _fetchTusks(FeedFetchEvent event, Emitter<FeedState> emit) async {
@@ -25,6 +27,41 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> {
           status: FeedStatus.error,
         ));
       });
+    } catch (e) {
+      emit(state.copyWith(
+        errorMessage: e.toString(),
+        status: FeedStatus.error,
+      ));
+    }
+  }
+
+  void _likeTusk(FeedLikeEvent event, Emitter<FeedState> emit) async {
+    emit(state.copyWith(status: FeedStatus.actionLoading));
+    try {
+      final likes = await _tuskRepository.getMyLikesByTusk(event.tuskId);
+
+      if (likes.isEmpty) {
+        await _tuskRepository.addLike(event.tuskId, event.isLiked);
+      } else {
+        for(var like in likes) {
+          await _tuskRepository.removeLike(like.id, event.tuskId);
+        }
+        await _tuskRepository.addLike(event.tuskId, event.isLiked);
+      }
+      emit(state.copyWith(status: FeedStatus.actionSuccess));
+    } catch (e) {
+      emit(state.copyWith(
+        errorMessage: e.toString(),
+        status: FeedStatus.error,
+      ));
+    }
+  }
+
+  void _shareTusk(FeedShareEvent event, Emitter<FeedState> emit) async {
+    emit(state.copyWith(status: FeedStatus.actionLoading));
+    try {
+      final link = await _tuskRepository.generateTuskDynamicLink(event.tuskId);
+      emit(state.copyWith(status: FeedStatus.dynamicLinkSuccess, dynamicLink: link));
     } catch (e) {
       emit(state.copyWith(
         errorMessage: e.toString(),

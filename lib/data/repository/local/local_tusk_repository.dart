@@ -1,10 +1,18 @@
 import 'dart:async';
+import 'package:twittusk/domain/models/like.dart';
 import 'package:twittusk/domain/repository/tusk_repository.dart';
 import 'package:twittusk/domain/models/user.dart';
 import 'package:twittusk/domain/models/tusk.dart';
+import '../../../domain/models/user_session.dart';
 
 class LocalTuskRepository implements TuskRepository {
   final StreamController<List<Tusk>> _controller = StreamController<List<Tusk>>();
+
+  @override
+  Future<UserSession> signIn(String email, String password) {
+    // TODO: implement signIn
+    throw UnimplementedError();
+  }
 
   @override
   Stream<List<Tusk>> getTusks() {
@@ -37,15 +45,6 @@ class LocalTuskRepository implements TuskRepository {
           nbDislikes: 19647,
           nbLikes: 308729363,
       ),
-      Tusk(
-        id: "21",
-        description: "TU pues CONNNAARRDDD !!!!",
-        profile: profile,
-        publishedAt: DateTime(2023, 02, 11, 12, 52),
-        nbComments: 3,
-        nbDislikes: 20,
-        nbLikes: 13786,
-      )
     ]);
     return _controller.stream;
   }
@@ -55,4 +54,66 @@ class LocalTuskRepository implements TuskRepository {
     // TODO: implement getTusksByUser
     throw UnimplementedError();
   }
+
+  @override
+  Future<void> resetPassword(String email) {
+    // TODO: implement resetPassword
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<UserSession> signUp(String username, String email, String password) {
+    // TODO: implement signUp
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> addUser(User user) {
+    // TODO: implement addUser
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<UserSession> signInWithGoogle() {
+    // TODO: implement signInWithGoogle
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<UserSession> signInWithTwitter() {
+    // TODO: implement signInWithTwitter
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<User> getUserById(String uid) {
+    // TODO: implement getUserById
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> addLike(String tuskId, bool isLiked) {
+    // TODO: implement addLike
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<List<Like>> getMyLikesByTusk(String tuskId) {
+    // TODO: implement getLikesByTusk
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> removeLike(String likeId, String tuskId) {
+    // TODO: implement removeLike
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<Uri> generateTuskDynamicLink(String tuskId) {
+    // TODO: implement generateTuskDynamicLink
+    throw UnimplementedError();
+  }
+
+
 }

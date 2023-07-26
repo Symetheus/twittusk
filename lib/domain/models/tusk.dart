@@ -10,6 +10,8 @@ class Tusk {
   final int nbLikes;
   final int nbDislikes;
   final int nbComments;
+  final bool isLiked;
+  final bool isDisliked;
 
   Tusk({
     required this.id,
@@ -20,6 +22,8 @@ class Tusk {
     required this.nbLikes,
     required this.nbDislikes,
     required this.nbComments,
+    this.isLiked = false,
+    this.isDisliked = false,
   });
 
   String getNbCommentStr() {
