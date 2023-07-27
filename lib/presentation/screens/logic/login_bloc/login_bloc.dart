@@ -88,6 +88,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     try {
       final userSession = await repository.signInWithTwitter();
       final userExisted = await repository.getUserById(userSession.uid);
+      print(userExisted);
       if(userExisted == null) {
         final user = User(
           uid: userSession.uid,
@@ -98,8 +99,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           profilePicUri: 'https://firebasestorage.googleapis.com/v0/b/twittusk.appspot.com/o/profils%2Fprofile-default.png?alt=media&token=ae11ba74-e84d-4a95-ac0d-5e1b572dda95',
           bannerPicUri: 'https://firebasestorage.googleapis.com/v0/b/twittusk.appspot.com/o/banner%2Fbanner-default.jpg?alt=media&token=d88c5d06-3c62-4642-a392-48e6f534fc55',
         );
-        await notificationRepository.subscribeToTopic('users_${userSession.uid}');
         await repository.addUser(user);
+        await notificationRepository.subscribeToTopic('users_${userSession.uid}');
       }
       emit(state.copyWith(status: LoginStatus.success, user: userSession));
     } catch(e) {

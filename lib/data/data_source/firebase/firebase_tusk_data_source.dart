@@ -61,8 +61,7 @@ class FirebaseTuskDataSource implements TuskDataSource {
 
   @override
   Future<void> addUser(UserDto user) async {
-    final doc = _firestore.collection("users").doc(user.uid);
-    await doc.set(user.toJson());
+    final doc = _firestore.collection("users").doc(user.uid).set(user.toJson());
   }
 
   @override
