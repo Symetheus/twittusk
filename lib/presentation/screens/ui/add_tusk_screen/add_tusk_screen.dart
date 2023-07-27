@@ -51,14 +51,13 @@ class _AddTuskScreenState extends State<AddTuskScreen> {
           color: Theme.of(context).customColors.onBackground,
           iconSize: Dimens.smallIconSize,
         ),
-        title: const Text("Créer un Tusk"),
+        title: const Text("Create Tusk"),
         actions: [
-          LittleButton.primary(
-            text: 'Tusker',
-            onPressed: () => _onPressed(),
-            style: TextButton.styleFrom(
-              maximumSize: const Size(Dimens.littleButtonMinWidth,
-                  Dimens.littleButtonMinInteractiveTouch),
+          SizedBox(
+            width: 80,
+            child: LittleButton.primary(
+              text: 'Tusker',
+              onPressed: () => _onPressed(),
             ),
           ),
         ],
@@ -196,7 +195,7 @@ class _AddTuskScreenState extends State<AddTuskScreen> {
                                   top: Dimens.standardPadding),
                               child: Container(
                                 child: SolidButton(
-                                  label: "Ajouter une image",
+                                  label: "Add an image",
                                   backgroundColor:
                                       Theme.of(context).customColors.primary,
                                   onPressed: () => pickImage(),
@@ -217,9 +216,9 @@ class _AddTuskScreenState extends State<AddTuskScreen> {
                                   minLines: 1,
                                   controller: _controller,
                                   decoration: InputDecoration(
-                                    labelText: 'Ecrivez votre Tusk',
+                                    labelText: 'Write your Tusk',
                                     border: OutlineInputBorder(),
-                                    hintText: 'Ecrivez votre Tusk ...',
+                                    hintText: 'Write your Tusk ...',
                                     fillColor: Theme.of(context)
                                         .customColors
                                         .surface,
