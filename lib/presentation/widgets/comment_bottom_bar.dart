@@ -21,7 +21,8 @@ class CommentBottomBar extends StatelessWidget {
     final commentController = TextEditingController();
 
     return BottomAppBar(
-      color: Theme.of(context).customColors.background,
+      elevation: 0,
+      color: Theme.of(context).customColors.bottomNavBar,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: Dimens.standardPadding),
         child: Column(

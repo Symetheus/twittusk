@@ -107,14 +107,15 @@ class TuskScreen extends StatelessWidget {
                               onTapShare: () => _onShare(context, state.mainTusk!.id),
                             );
                           }
+                          final tusk = state.tusks[index - 1];
                           return Padding(
                             padding: const EdgeInsets.all(Dimens.halfPadding),
                             child: TuskItem(
-                              tusk: state.tusks[index - 1],
-                              onTapDislike: () => _onLikeOrDislike(context, state.mainTusk!.id, false),
-                              onTapLike: () => _onLikeOrDislike(context, state.mainTusk!.id, true),
-                              onTapComment: () => TuskScreen.navigate(context, state.mainTusk!.id),
-                              onTapShare: () => _onShare(context, state.mainTusk!.id),
+                              tusk: tusk,
+                              onTapDislike: () => _onLikeOrDislike(context, tusk.id, false),
+                              onTapLike: () => _onLikeOrDislike(context, tusk.id, true),
+                              onTapComment: () => TuskScreen.navigate(context, tusk.id),
+                              onTapShare: () => _onShare(context, tusk.id),
                             ),
                           );
                         },

@@ -60,7 +60,7 @@ class TuskBloc extends Bloc<TuskEvent, TuskState> {
   void _onCommentTusk(TuskCommentEvent event, Emitter<TuskState> emit) async {
     emit(state.copyWith(status: TuskStatus.loading));
     try {
-      final tusksStream = await tuskRepository.getCommentsForTusk(event.tuskId);
+      final tusksStream = tuskRepository.getCommentsForTusk(event.tuskId);
 
       await emit.forEach(tusksStream, onData: (tusks) {
         return state.copyWith(tusks: tusks, status: TuskStatus.success);
