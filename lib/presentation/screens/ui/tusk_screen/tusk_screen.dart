@@ -80,8 +80,8 @@ class TuskScreen extends StatelessWidget {
                 return const Center(
                   child: CircularProgressIndicator(),
                 );
-              case TuskStatus.dynamicLinkSuccess:
-              case TuskStatus.success:
+              //case TuskStatus.success:
+              default:
                 return Scaffold(
                   resizeToAvoidBottomInset: true,
                   appBar: AppBar(
@@ -107,14 +107,15 @@ class TuskScreen extends StatelessWidget {
                               onTapShare: () => _onShare(context, state.mainTusk!.id),
                             );
                           }
+                          final tusk = state.tusks[index - 1];
                           return Padding(
                             padding: const EdgeInsets.all(Dimens.halfPadding),
                             child: TuskItem(
-                              tusk: state.tusks[index - 1],
-                              onTapDislike: () => _onLikeOrDislike(context, state.mainTusk!.id, false),
-                              onTapLike: () => _onLikeOrDislike(context, state.mainTusk!.id, true),
-                              onTapComment: () => TuskScreen.navigate(context, state.mainTusk!.id),
-                              onTapShare: () => _onShare(context, state.mainTusk!.id),
+                              tusk: tusk,
+                              onTapDislike: () => _onLikeOrDislike(context, tusk.id, false),
+                              onTapLike: () => _onLikeOrDislike(context, tusk.id, true),
+                              onTapComment: () => TuskScreen.navigate(context, tusk.id),
+                              onTapShare: () => _onShare(context, tusk.id),
                             ),
                           );
                         },
@@ -122,34 +123,6 @@ class TuskScreen extends StatelessWidget {
                     ),
                   ),
                   bottomNavigationBar: CommentBottomBar(user: state.user!, tusk: state.mainTusk!),
-                );
-              default:
-                return Scaffold(
-                  resizeToAvoidBottomInset: true,
-                  appBar: AppBar(
-                    backgroundColor: Theme.of(context).customColors.background,
-                    leading: IconButton(
-                      icon: const Icon(Icons.close),
-                      tooltip: MaterialLocalizations.of(context).closeButtonTooltip,
-                      onPressed: () => Navigator.of(context).pop(),
-                    ),
-                    title: const Text('Tusk'),
-                  ),
-                  body: SafeArea(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: Dimens.halfPadding),
-                      child: ListView(
-                        children: [
-                          TuskItem(
-                            tusk: state.mainTusk!,
-                            onTapDislike: () => _onLikeOrDislike(context, state.mainTusk!.id, false),
-                            onTapLike: () => _onLikeOrDislike(context, state.mainTusk!.id, true),
-                            onTapShare: () => _onShare(context, state.mainTusk!.id),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
                 );
             }
           },
