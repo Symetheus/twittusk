@@ -25,43 +25,10 @@ class TuskScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     context.read<TuskBloc>().add(InitUserEvent(tuskId: idTusk));
 
-    return BlocBuilder<TuskBloc, TuskState>(
-      builder: (context, state) {
-        switch (state.status) {
-          case TuskStatus.initUser:
-            return Scaffold(
-              resizeToAvoidBottomInset: true,
-              appBar: AppBar(
-                backgroundColor: Theme.of(context).customColors.background,
-                leading: IconButton(
-                  icon: const Icon(Icons.close),
-                  tooltip: MaterialLocalizations.of(context).closeButtonTooltip,
-                  onPressed: () => Navigator.of(context).pop(),
-                ),
-                title: const Text('Tweet'),
-              ),
-              body: SafeArea(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: Dimens.halfPadding),
-                  child: ListView(
-                    children: [
-                      TuskItem(tusk: state.mainTusk!),
-
-                    ],
-                  ),
-                ),
-              ),
-              bottomNavigationBar: CommentBottomBar(user: state.user!, tusk: state.mainTusk!),
-            );
-          default:
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-        }
     return BlocConsumer<TuskBloc, TuskState>(
       listener: (context, state) {
-         if (state.status == TuskStatus.initUser) {
-          context.read<TuskBloc>().add(TuskCommentEvent(tuskId: tusk.id));
+        if (state.status == TuskStatus.initUser) {
+          context.read<TuskBloc>().add(TuskCommentEvent(tuskId: state.mainTusk!.id));
         } else if (state.status == TuskStatus.errorComment) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -85,25 +52,25 @@ class TuskScreen extends StatelessWidget {
                       tooltip: MaterialLocalizations.of(context).closeButtonTooltip,
                       onPressed: () => Navigator.of(context).pop(),
                     ),
-                    title: const Text('Tusk'),
+                    title: const Text('Tweet'),
                   ),
                   body: SafeArea(
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: Dimens.halfPadding),
                       child: ListView(
                         children: [
-                          TuskItem(tusk: tusk),
+                          TuskItem(tusk: state.mainTusk!),
                         ],
                       ),
                     ),
                   ),
-                  bottomNavigationBar: CommentBottomBar(user: state.user!, tusk: tusk),
+                  bottomNavigationBar: CommentBottomBar(user: state.user!, tusk: state.mainTusk!),
                 );
               case TuskStatus.loading:
                 return const Center(
                   child: CircularProgressIndicator(),
                 );
-                case TuskStatus.success:
+              case TuskStatus.success:
                 return Scaffold(
                   resizeToAvoidBottomInset: true,
                   appBar: AppBar(
@@ -122,7 +89,7 @@ class TuskScreen extends StatelessWidget {
                         itemCount: state.tusks.length + 1,
                         itemBuilder: (context, index) {
                           if (index == 0) {
-                            return TuskItem(tusk: tusk);
+                            return TuskItem(tusk: state.mainTusk!);
                           }
                           return Padding(
                             padding: const EdgeInsets.all(Dimens.halfPadding),
@@ -132,7 +99,7 @@ class TuskScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  bottomNavigationBar: CommentBottomBar(user: state.user!, tusk: tusk),
+                  bottomNavigationBar: CommentBottomBar(user: state.user!, tusk: state.mainTusk!),
                 );
               default:
                 return Scaffold(
@@ -150,9 +117,7 @@ class TuskScreen extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: Dimens.halfPadding),
                       child: ListView(
-                        children: [
-                          TuskItem(tusk: tusk),
-                        ],
+                        children: const [],
                       ),
                     ),
                   ),
