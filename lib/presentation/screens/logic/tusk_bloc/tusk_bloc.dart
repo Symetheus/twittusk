@@ -51,7 +51,7 @@ class TuskBloc extends Bloc<TuskEvent, TuskState> {
         'Someone comment your tusk',
         event.comment,
       );
-      emit(state.copyWith(status: TuskStatus.actionSuccess));
+      emit(state.copyWith(status: TuskStatus.success));
     } catch (e) {
       emit(state.copyWith(errorMessage: e.toString(), status: TuskStatus.error));
     }
@@ -77,7 +77,7 @@ class TuskBloc extends Bloc<TuskEvent, TuskState> {
   }
 
   void _likeTusk(TuskLikeEvent event, Emitter<TuskState> emit) async {
-    emit(state.copyWith(status: TuskStatus.actionLoading));
+    // emit(state.copyWith(status: TuskStatus.actionLoading));
     try {
       final likes = await tuskRepository.getMyLikesByTusk(event.tuskId);
 
@@ -89,17 +89,18 @@ class TuskBloc extends Bloc<TuskEvent, TuskState> {
         }
         await tuskRepository.addLike(event.tuskId, event.isLiked);
       }
-      emit(state.copyWith(status: TuskStatus.actionSuccess));
+      emit(state.copyWith(status: TuskStatus.success));
     } catch (e) {
       emit(state.copyWith(errorMessage: e.toString(), status: TuskStatus.error));
     }
   }
 
   void _shareTusk(TuskShareEvent event, Emitter<TuskState> emit) async {
-    emit(state.copyWith(status: TuskStatus.actionLoading));
+    // emit(state.copyWith(status: TuskStatus.actionLoading));
     try {
       final link = await tuskRepository.generateTuskDynamicLink(event.tuskId);
-      emit(state.copyWith(status: TuskStatus.actionSuccess, dynamicLink: link));
+
+      emit(state.copyWith(status: TuskStatus.dynamicLinkSuccess, dynamicLink: link));
     } catch (e) {
       emit(state.copyWith(errorMessage: e.toString(), status: TuskStatus.error));
     }

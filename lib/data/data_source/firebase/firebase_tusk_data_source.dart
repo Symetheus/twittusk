@@ -13,7 +13,6 @@ import 'package:twittusk/data/dto/like_dto.dart';
 import 'package:twittusk/data/dto/tusk_add_dto.dart';
 import 'package:twittusk/data/dto/tusk_dto.dart';
 import 'package:twittusk/data/dto/user_dto.dart';
-import '../../dto/tusk_add_dto.dart';
 import '../../dto/user_session_dto.dart';
 
 
