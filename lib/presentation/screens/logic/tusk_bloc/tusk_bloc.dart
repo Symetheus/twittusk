@@ -3,15 +3,20 @@ import 'package:flutter/foundation.dart';
 import 'package:twittusk/domain/models/tusk.dart';
 import 'package:twittusk/domain/models/user.dart';
 import 'package:twittusk/domain/repository/tusk_repository.dart';
+import '../../../../domain/repository/notification_repository.dart';
 
 part 'tusk_event.dart';
 
 part 'tusk_state.dart';
 
 class TuskBloc extends Bloc<TuskEvent, TuskState> {
-  final TuskRepository _tuskRepository;
+  final TuskRepository tuskRepository;
+  final NotificationRepository notificationRepository;
 
-  TuskBloc(this._tuskRepository) : super(TuskState.initial()) {
+  TuskBloc({
+    required this.tuskRepository,
+    required this.notificationRepository
+  }) : super(TuskState.initial()) {
     on<InitUserEvent>(_onInitTusk);
     on<TuskAddCommentEvent>(_onAddCommentTusk);
     on<TuskCommentEvent>(_onCommentTusk);
@@ -19,12 +24,12 @@ class TuskBloc extends Bloc<TuskEvent, TuskState> {
     on<TuskShareEvent>(_shareTusk);
   }
 
-  void _onInitTusk(TuskEvent event, Emitter<TuskState> emit) async {
+  void _onInitTusk(InitUserEvent event, Emitter<TuskState> emit) async {
     emit(state.copyWith(status: TuskStatus.loading));
     try {
-      final user = await _tuskRepository.getCurrentUser();
-      print(user);
-      emit(state.copyWith(user: user, status: TuskStatus.initUser));
+      final user = await tuskRepository.getCurrentUser();
+      final tusk = await tuskRepository.getTuskById(event.tuskId);
+      emit(state.copyWith(user: user, mainTusk: tusk, status: TuskStatus.initUser));
     } catch (e) {
       emit(state.copyWith(errorMessage: e.toString(), status: TuskStatus.error));
     }
@@ -40,7 +45,12 @@ class TuskBloc extends Bloc<TuskEvent, TuskState> {
     }
 
     try {
-      await _tuskRepository.addCommentToTusk(event.tusk.id, event.comment, event.user);
+      await tuskRepository.addCommentToTusk(event.tusk.id, event.comment, event.user);
+      await notificationRepository.sendMessageFromTuskId(
+        event.tusk.id,
+        'Someone comment your tusk',
+        event.comment,
+      );
       emit(state.copyWith(status: TuskStatus.actionSuccess));
     } catch (e) {
       emit(state.copyWith(errorMessage: e.toString(), status: TuskStatus.error));
@@ -50,7 +60,7 @@ class TuskBloc extends Bloc<TuskEvent, TuskState> {
   void _onCommentTusk(TuskCommentEvent event, Emitter<TuskState> emit) async {
     emit(state.copyWith(status: TuskStatus.loading));
     try {
-      final tusksStream = _tuskRepository.getCommentsForTusk(event.tuskId);
+      final tusksStream = await tuskRepository.getCommentsForTusk(event.tuskId);
 
       await emit.forEach(tusksStream, onData: (tusks) {
         return state.copyWith(tusks: tusks, status: TuskStatus.success);
@@ -69,15 +79,15 @@ class TuskBloc extends Bloc<TuskEvent, TuskState> {
   void _likeTusk(TuskLikeEvent event, Emitter<TuskState> emit) async {
     emit(state.copyWith(status: TuskStatus.actionLoading));
     try {
-      final likes = await _tuskRepository.getMyLikesByTusk(event.tuskId);
+      final likes = await tuskRepository.getMyLikesByTusk(event.tuskId);
 
       if (likes.isEmpty) {
-        await _tuskRepository.addLike(event.tuskId, event.isLiked);
+        await tuskRepository.addLike(event.tuskId, event.isLiked);
       } else {
         for (var like in likes) {
-          await _tuskRepository.removeLike(like.id, event.tuskId);
+          await tuskRepository.removeLike(like.id, event.tuskId);
         }
-        await _tuskRepository.addLike(event.tuskId, event.isLiked);
+        await tuskRepository.addLike(event.tuskId, event.isLiked);
       }
       emit(state.copyWith(status: TuskStatus.actionSuccess));
     } catch (e) {
@@ -88,7 +98,7 @@ class TuskBloc extends Bloc<TuskEvent, TuskState> {
   void _shareTusk(TuskShareEvent event, Emitter<TuskState> emit) async {
     emit(state.copyWith(status: TuskStatus.actionLoading));
     try {
-      final link = await _tuskRepository.generateTuskDynamicLink(event.tuskId);
+      final link = await tuskRepository.generateTuskDynamicLink(event.tuskId);
       emit(state.copyWith(status: TuskStatus.actionSuccess, dynamicLink: link));
     } catch (e) {
       emit(state.copyWith(errorMessage: e.toString(), status: TuskStatus.error));

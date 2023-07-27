@@ -3,6 +3,7 @@ part of 'tusk_bloc.dart';
 enum TuskStatus { initial, initUser, loading, actionLoading, success, actionSuccess, dynamicLinkSuccess, error, errorComment }
 
 class TuskState {
+  final Tusk? mainTusk;
   final TuskStatus status;
   final String errorMessage;
   final List<Tusk> tusks;
@@ -10,6 +11,7 @@ class TuskState {
   final User? user;
 
   TuskState({
+    this.mainTusk,
     required this.errorMessage,
     required this.status,
     required this.tusks,
@@ -26,6 +28,7 @@ class TuskState {
   }
 
   TuskState copyWith({
+    Tusk? mainTusk,
     TuskStatus? status,
     String? errorMessage,
     List<Tusk>? tusks,
@@ -33,6 +36,7 @@ class TuskState {
     User? user,
   }) {
     return TuskState(
+      mainTusk: mainTusk ?? this.mainTusk,
       status: status ?? this.status,
       errorMessage: errorMessage ?? this.errorMessage,
       tusks: tusks ?? this.tusks,

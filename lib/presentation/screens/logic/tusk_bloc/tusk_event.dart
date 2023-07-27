@@ -3,7 +3,13 @@ part of 'tusk_bloc.dart';
 @immutable
 abstract class TuskEvent {}
 
-class InitUserEvent extends TuskEvent {}
+class InitUserEvent extends TuskEvent {
+  InitUserEvent({
+    required this.tuskId,
+  });
+
+  final String tuskId;
+}
 
 class TuskCommentEvent extends TuskEvent {
   TuskCommentEvent({

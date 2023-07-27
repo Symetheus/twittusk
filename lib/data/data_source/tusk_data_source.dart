@@ -2,6 +2,7 @@ import 'package:twittusk/data/dto/like_dto.dart';
 import 'package:twittusk/data/dto/tusk_add_dto.dart';
 import 'package:twittusk/data/dto/tusk_dto.dart';
 import 'package:twittusk/data/dto/user_session_dto.dart';
+import '../dto/tusk_add_dto.dart';
 import '../dto/user_dto.dart';
 
 abstract class TuskDataSource {
@@ -39,5 +40,11 @@ abstract class TuskDataSource {
 
   Stream<List<TuskDto>> getCommentsForTusk(String tuskId);
 
+  Future<TuskDto> getById(String tuskId);
+
   Future<void> logout();
+
+  Future<String> uploadImage(String path);
+
+  Future<void> addTusk(String description, DateTime publishAt, String? image, UserDto user);
 }

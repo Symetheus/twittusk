@@ -7,6 +7,9 @@ enum CurrentUserStatus {
   logoutSuccess,
   logoutLoading,
   logoutError,
+  addloading,
+  addSuccess,
+  addError,
   error
 }
 class CurrentUserState {
