@@ -40,6 +40,7 @@ class Dimens {
   static const double dividerThickness = 2.0;
   static const double thinDividerThickness = 1.0;
 
+  static const double bannerMinHeight = 100;
   static const double bannerMaxHeight = 125;
   static const double bannerUltraHeight = 200;
 }

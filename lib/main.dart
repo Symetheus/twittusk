@@ -12,12 +12,13 @@ import 'package:twittusk/data/data_source/firebase/firebase_notification_data_so
 import 'package:twittusk/data/repository/firebase/firebase_notification_repository.dart';
 import 'package:twittusk/data/repository/firebase/firebase_tusk_repository.dart';
 import 'package:twittusk/presentation/screens/logic/current_user_bloc/current_user_bloc.dart';
-import 'package:twittusk/domain/models/tusk.dart';
+import 'package:twittusk/presentation/screens/logic/edit_profile_bloc/edit_profile_bloc.dart';
 import 'package:twittusk/presentation/screens/logic/feed_bloc/feed_bloc.dart';
 import 'package:twittusk/presentation/screens/logic/login_bloc/login_bloc.dart';
 import 'package:twittusk/presentation/screens/ui/add_tusk_screen/add_tusk_screen.dart';
 import 'package:twittusk/presentation/screens/logic/profile_feed_bloc/profile_feed_bloc.dart';
 import 'package:twittusk/presentation/screens/logic/tusk_bloc/tusk_bloc.dart';
+import 'package:twittusk/presentation/screens/ui/edit_profile/edit_profile_screen.dart';
 import 'package:twittusk/presentation/screens/ui/login_screen/login_screen.dart';
 import 'package:twittusk/presentation/screens/ui/nav_screen/nav_screen.dart';
 import 'package:twittusk/presentation/screens/ui/profile_feed_screen/profile_feed_screen.dart';
@@ -109,6 +110,13 @@ class MyApp extends StatelessWidget {
             ),
           ),
         ),
+        BlocProvider<EditProfileBloc>(
+          create: (context) => EditProfileBloc(
+            FirebaseTuskRepository(
+              FirebaseTuskDataSource(),
+            ),
+          ),
+        ),
       ],
       child: MaterialApp(
         title: 'Twittusk',
@@ -120,6 +128,7 @@ class MyApp extends StatelessWidget {
           NavScreen.routeName: (context) => const NavScreen(),
           LoginScreen.routeName: (context) => const LoginScreen(),
           AddTuskScreen.routeName: (context) => const AddTuskScreen(),
+          EditProfileScreen.routeName: (context) => EditProfileScreen(),
           // FeedScreen.routeName: (context) => const FeedScreen(),
         },
         onGenerateRoute: (settings) {

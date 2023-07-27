@@ -21,6 +21,8 @@ abstract class TuskDataSource {
 
   Future<void> resetPassword(String email);
 
+  Future<void> updateUser(UserDto user);
+
   Future<UserDto?> getUserById(String uid);
 
   // TUSKS

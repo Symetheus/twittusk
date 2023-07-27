@@ -124,7 +124,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         return SingleChildScrollView(child: Padding(
                           padding: const EdgeInsets.only(bottom: 10.0),
                           child: currentForm,
-                        ));
+                        ),
+                        );
                       },
                     ),
                   ],

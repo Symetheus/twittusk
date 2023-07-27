@@ -46,4 +46,6 @@ abstract class TuskRepository {
   Future<String> uploadImage(String path);
 
   Future<void> addTusk(String description, DateTime publishAt, String? image, User user);
+
+  Future<void> updateUser(User user);
 }

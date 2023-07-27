@@ -142,4 +142,9 @@ class FirebaseTuskRepository implements TuskRepository {
     await _dataSource.addTusk(description, publishAt, image, UserDto.fromUser(user));
   }
 
+  @override
+  Future<void> updateUser(User user){
+    return _dataSource.updateUser(UserDto.fromUser(user));
+  }
+
 }

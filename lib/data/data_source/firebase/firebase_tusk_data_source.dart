@@ -284,4 +284,9 @@ class FirebaseTuskDataSource implements TuskDataSource {
       return tusk;
     });
   }
+
+  @override
+  Future<void> updateUser(UserDto user) async {
+    await _firestore.collection('users').doc(user.uid).update(user.toJson());
+  }
 }
