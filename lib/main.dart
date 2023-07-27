@@ -27,17 +27,6 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: "lib/.env");
   await Firebase.initializeApp();
-  final initialLink = await FirebaseDynamicLinks.instance.getInitialLink();
-  if (initialLink != null) {
-    final Uri deepLink = initialLink.link;
-    print(deepLink.path); // TODO: handle deep link
-    //Navigator.pushNamed(context, deepLink.path);
-  }
-  FirebaseDynamicLinks.instance.onLink.listen(
-    (pendingDynamicLinkData) {
-      final Uri deepLink = pendingDynamicLinkData.link;
-    },
-  );
   final messaging = FirebaseMessaging.instance;
   final settings = await messaging.requestPermission(
     alert: true,
@@ -131,8 +120,8 @@ class MyApp extends StatelessWidget {
               }
             case TuskScreen.routeName:
               final arguments = settings.arguments;
-              if (arguments != null && arguments is Tusk) {
-                content = TuskScreen(tusk: arguments);
+              if (arguments != null && arguments is String) {
+                content = TuskScreen(idTusk: arguments);
               }
           }
           return MaterialPageRoute(builder: (context) => content);
@@ -140,4 +129,7 @@ class MyApp extends StatelessWidget {
       ),
     );
   }
+
+
+
 }

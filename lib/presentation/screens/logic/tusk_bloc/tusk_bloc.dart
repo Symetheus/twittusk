@@ -19,12 +19,12 @@ class TuskBloc extends Bloc<TuskEvent, TuskState> {
     on<TuskShareEvent>(_shareTusk);
   }
 
-  void _onInitTusk(TuskEvent event, Emitter<TuskState> emit) async {
+  void _onInitTusk(InitUserEvent event, Emitter<TuskState> emit) async {
     emit(state.copyWith(status: TuskStatus.loading));
     try {
       final user = await _tuskRepository.getCurrentUser();
-      print(user);
-      emit(state.copyWith(user: user, status: TuskStatus.initUser));
+      final tusk = await _tuskRepository.getTuskById(event.tuskId);
+      emit(state.copyWith(user: user, mainTusk: tusk, status: TuskStatus.initUser));
     } catch (e) {
       emit(state.copyWith(errorMessage: e.toString(), status: TuskStatus.error));
     }

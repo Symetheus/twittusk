@@ -1,3 +1,4 @@
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -29,6 +30,8 @@ class _FeedScreenState extends State<FeedScreen> {
 
   @override
   Widget build(BuildContext context) {
+    _initDynamicLinks(context);
+
     return Scaffold(
       body: SafeArea(
         child: BlocConsumer<FeedBloc, FeedState>(
@@ -54,7 +57,7 @@ class _FeedScreenState extends State<FeedScreen> {
                       padding: const EdgeInsets.only(top: Dimens.minPadding),
                       child: TuskItem(
                           tusk: tusk,
-                          onTapComment: () => TuskScreen.navigate(context, tusk),
+                          onTapComment: () => TuskScreen.navigate(context, tusk.id),
                           onTapProfile: () => ProfileFeedScreen.navigate(context, tusk.profile),
                           onTapLike: () => _onLikeOrDislike(context, tusk.id, true),
                           onTapDislike: () => _onLikeOrDislike(context, tusk.id, false),
@@ -100,5 +103,24 @@ class _FeedScreenState extends State<FeedScreen> {
     ));
     BlocProvider.of<FeedBloc>(context).add(FeedFetchEvent());
 
+  }
+
+  void _initDynamicLinks(BuildContext context) async {
+    final initialLink = await FirebaseDynamicLinks.instance.getInitialLink();
+    if (initialLink != null) {
+      final deepLink = initialLink.link.toString().split("/").last;
+      _navigateToTuskScreen(context, deepLink);
+    }
+
+    FirebaseDynamicLinks.instance.onLink.listen((pendingDynamicLinkData) {
+      final Uri deepLink = pendingDynamicLinkData.link;
+      final taskId = deepLink.toString().split("/").last;
+      print(taskId);
+      _navigateToTuskScreen(context, taskId);
+    });
+  }
+
+  void _navigateToTuskScreen(BuildContext context, String taskId) {
+    TuskScreen.navigate(context, taskId);
   }
 }
