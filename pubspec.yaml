@@ -53,6 +53,7 @@ dependencies:
   url_launcher: ^6.1.11
   share: ^2.0.4
   image_picker: ^1.0.1
+  firebase_storage: ^11.2.5
 
 dev_dependencies:
   flutter_test:

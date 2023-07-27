@@ -1,7 +1,9 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:twitter_login/twitter_login.dart';
@@ -11,7 +13,9 @@ import 'package:twittusk/data/dto/like_dto.dart';
 import 'package:twittusk/data/dto/tusk_add_dto.dart';
 import 'package:twittusk/data/dto/tusk_dto.dart';
 import 'package:twittusk/data/dto/user_dto.dart';
+import '../../dto/tusk_add_dto.dart';
 import '../../dto/user_session_dto.dart';
+
 
 class FirebaseTuskDataSource implements TuskDataSource {
   final _tuskStreamController = StreamController<List<TuskDto>>();
@@ -247,5 +251,25 @@ class FirebaseTuskDataSource implements TuskDataSource {
   @override
   Future<void> logout() {
     return _auth.signOut();
+  }
+
+  @override
+  Future<String> uploadImage(String path) async {
+    final storageRef = FirebaseStorage.instance.ref().child("tusks");
+    final uploadTask = storageRef.putFile(File(path));
+    final snapshot = await uploadTask;
+    return snapshot.ref.getDownloadURL();
+  }
+
+  @override
+  Future<void> addTusk(String description, DateTime publishAt, String? image, UserDto user) async {
+      final user = await getCurrentUser();
+      final json = TuskAddDto(
+        description: description,
+        publishedAt: publishAt,
+        image: image,
+        user: _firestore.collection("users").doc(user!.uid),
+      ).toJson();
+      await _firestore.collection('tusks').add(json);
   }
 }

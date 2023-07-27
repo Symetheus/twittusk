@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:twittusk/data/data_source/tusk_data_source.dart';
+import 'package:twittusk/data/dto/tusk_add_dto.dart';
 import 'package:twittusk/domain/models/like.dart';
 import 'package:twittusk/domain/models/user.dart';
 import 'package:twittusk/domain/repository/tusk_repository.dart';
@@ -123,6 +124,16 @@ class FirebaseTuskRepository implements TuskRepository {
   @override
   Future<void> logout() async {
     await _dataSource.logout();
+  }
+
+  @override
+  Future<String> uploadImage(String path) async {
+    return await _dataSource.uploadImage(path);
+  }
+
+  @override
+  Future<void> addTusk(String description, DateTime publishAt, String? image, User user) async {
+    await _dataSource.addTusk(description, publishAt, image, UserDto.fromUser(user));
   }
 
 }

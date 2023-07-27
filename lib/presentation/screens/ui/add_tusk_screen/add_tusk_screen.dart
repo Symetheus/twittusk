@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:twittusk/data/dto/tusk_add_dto.dart';
 import 'package:twittusk/presentation/widgets/buttons/solid_button.dart';
 import 'package:twittusk/presentation/widgets/littleButton.dart';
 import 'package:twittusk/theme/dimens.dart';
@@ -54,7 +55,7 @@ class _AddTuskScreenState extends State<AddTuskScreen> {
         actions: [
           LittleButton.primary(
             text: 'Tusker',
-            onPressed: () => {},
+            onPressed: () => _onPressed(),
             style: TextButton.styleFrom(
               maximumSize: const Size(Dimens.littleButtonMinWidth,
                   Dimens.littleButtonMinInteractiveTouch),
@@ -71,6 +72,18 @@ class _AddTuskScreenState extends State<AddTuskScreen> {
                 if (state.status == CurrentUserStatus.success) {
                   _user = state.user!;
                 }
+                if(state.status == CurrentUserStatus.addSuccess){
+                  Navigator.pop(context); // pop the add tusk screen
+                }
+                if(state.status == CurrentUserStatus.addError){
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(state.errorMessage),
+                      backgroundColor: Theme.of(context).customColors.error,
+                    ),
+                  );
+                }
+
               },
               builder: (context, state) {
                 print("User : ${state.user}");
@@ -204,17 +217,20 @@ class _AddTuskScreenState extends State<AddTuskScreen> {
                                   Radius.circular(Dimens.smallRadius),
                                 ),
                               ),
-                              child: TextField(
-                                controller: _controller,
-                                decoration: InputDecoration(
-                                  labelText: 'Ecrivez votre Tusk',
-                                  border: OutlineInputBorder(),
-                                  hintText: 'Ecrivez votre Tusk',
-                                  fillColor: Theme.of(context)
-                                      .customColors
-                                      .surface,
-                                  filled: true,
+                              child: Padding(
+                                padding: const EdgeInsets.only(top : Dimens.standardPadding),
+                                child: TextField(
+                                  controller: _controller,
+                                  decoration: InputDecoration(
+                                    labelText: 'Ecrivez votre Tusk',
+                                    border: OutlineInputBorder(),
+                                    hintText: 'Ecrivez votre Tusk',
+                                    fillColor: Theme.of(context)
+                                        .customColors
+                                        .surface,
+                                    filled: true,
 
+                                  ),
                                 ),
                               ),
                             ),
@@ -235,16 +251,12 @@ class _AddTuskScreenState extends State<AddTuskScreen> {
   void _onPressed() {
     final String text = _controller.text;
     if (text.isNotEmpty) {
+      if(pickedImage != null){
+        BlocProvider.of<CurrentUserBloc>(context).add(CurrentUserAddTuskEvent(_user!, DateTime.now(), text, pickedImage!.path));
+      }else{
+        BlocProvider.of<CurrentUserBloc>(context).add(CurrentUserAddTuskEvent(_user!, DateTime.now(), text, null));
+      }
 
-      // final Tusk tusk = Tusk(
-      //   user: _user,
-      //   text: text,
-      //   date: DateTime.now(),
-      //   imageUri: pickedImage?.path,
-      // );
-
-      // BlocProvider.of<TusksBloc>(context).add(AddTuskEvent(tusk));
-      // Navigator.pop(context);
     }
   }
 }

@@ -1,5 +1,6 @@
 import 'package:twittusk/domain/models/tusk.dart';
 import 'package:twittusk/domain/models/user_session.dart';
+import '../../data/dto/tusk_add_dto.dart';
 import '../models/like.dart';
 import '../models/user.dart';
 
@@ -40,4 +41,8 @@ abstract class TuskRepository {
 
 
   Future<void> logout();
+
+  Future<String> uploadImage(String path);
+
+  Future<void> addTusk(String description, DateTime publishAt, String? image, User user);
 }
