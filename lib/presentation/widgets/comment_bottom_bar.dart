@@ -41,7 +41,7 @@ class CommentBottomBar extends StatelessWidget {
                 ),
                 const SizedBox(width: Dimens.standardPadding),
                 Expanded(
-                  child: TextField(
+                  child: TextFormField(
                     scrollPadding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
                     controller: commentController,
                     decoration: const InputDecoration(

@@ -32,6 +32,13 @@ class TuskBloc extends Bloc<TuskEvent, TuskState> {
 
   void _onAddCommentTusk(TuskAddCommentEvent event, Emitter<TuskState> emit) async {
     emit(state.copyWith(status: TuskStatus.actionLoading));
+
+    if (event.comment.isEmpty) {
+      emit(state.copyWith(errorMessage: 'Le commentaire ne peut pas être vide !', status: TuskStatus.errorComment));
+      emit(state.copyWith(errorMessage: 'Le commentaire ne peut pas être vide !', status: TuskStatus.success));
+      return;
+    }
+
     try {
       await _tuskRepository.addCommentToTusk(event.tusk.id, event.comment, event.user);
       emit(state.copyWith(status: TuskStatus.actionSuccess));
@@ -43,7 +50,7 @@ class TuskBloc extends Bloc<TuskEvent, TuskState> {
   void _onCommentTusk(TuskCommentEvent event, Emitter<TuskState> emit) async {
     emit(state.copyWith(status: TuskStatus.loading));
     try {
-      final tusksStream = await _tuskRepository.getCommentsForTusk(event.tuskId);
+      final tusksStream = _tuskRepository.getCommentsForTusk(event.tuskId);
 
       await emit.forEach(tusksStream, onData: (tusks) {
         return state.copyWith(tusks: tusks, status: TuskStatus.success);

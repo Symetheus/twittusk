@@ -1,6 +1,6 @@
 part of 'tusk_bloc.dart';
 
-enum TuskStatus { initial, initUser, loading, actionLoading, success, actionSuccess, dynamicLinkSuccess, error }
+enum TuskStatus { initial, initUser, loading, actionLoading, success, actionSuccess, dynamicLinkSuccess, error, errorComment }
 
 class TuskState {
   final TuskStatus status;
