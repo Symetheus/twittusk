@@ -47,3 +47,7 @@ app.*.map.json
 *.env
 !/lib/.env
 /lib/.env
+
+# Xcode
+/ios/Podfile
+/ios/Podfile.lock

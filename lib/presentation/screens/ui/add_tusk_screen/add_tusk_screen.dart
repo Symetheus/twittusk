@@ -185,7 +185,7 @@ class _AddTuskScreenState extends State<AddTuskScreen> {
                             if (pickedImage != null)
                               Image.file(
                                 pickedImage!,
-                                width: 200,
+                                width: double.infinity,
                                 height: 200,
                                 fit: BoxFit.cover,
                               )
@@ -207,24 +207,19 @@ class _AddTuskScreenState extends State<AddTuskScreen> {
                             ),
                           ],
                         ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
+                        Expanded(
+                          child:
                             Container(
-                              decoration: BoxDecoration(
-                                color: Theme.of(context).customColors.background,
-                                borderRadius: const BorderRadius.all(
-                                  Radius.circular(Dimens.smallRadius),
-                                ),
-                              ),
                               child: Padding(
                                 padding: const EdgeInsets.only(top : Dimens.standardPadding),
                                 child: TextField(
+                                  maxLines: null,
+                                  minLines: 1,
                                   controller: _controller,
                                   decoration: InputDecoration(
                                     labelText: 'Ecrivez votre Tusk',
                                     border: OutlineInputBorder(),
-                                    hintText: 'Ecrivez votre Tusk',
+                                    hintText: 'Ecrivez votre Tusk ...',
                                     fillColor: Theme.of(context)
                                         .customColors
                                         .surface,
@@ -234,7 +229,6 @@ class _AddTuskScreenState extends State<AddTuskScreen> {
                                 ),
                               ),
                             ),
-                          ],
                         ),
                       ],
                     ),

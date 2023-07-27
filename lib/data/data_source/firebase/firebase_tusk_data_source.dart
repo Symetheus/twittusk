@@ -254,7 +254,10 @@ class FirebaseTuskDataSource implements TuskDataSource {
 
   @override
   Future<String> uploadImage(String path) async {
-    final storageRef = FirebaseStorage.instance.ref().child("tusks");
+    final user = await getCurrentUser();
+    final timestamp = DateTime.now().millisecondsSinceEpoch.toString();
+    final filename = "upload_$timestamp${user!.uid}.jpg";
+    final storageRef = FirebaseStorage.instance.ref().child("tusks/$filename");
     final uploadTask = storageRef.putFile(File(path));
     final snapshot = await uploadTask;
     return snapshot.ref.getDownloadURL();
